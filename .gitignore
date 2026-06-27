@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+
+# Carteles/fotos generados por cliente (privado — no subir al repo público)
+carteles/

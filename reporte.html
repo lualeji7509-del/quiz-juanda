@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte · Quiz de Juanda 🎓</title>
+<style>
+  :root{--navy:#142433;--green:#27D17C;--gold:#ffce54;--red:#ff5d6c;--paper:#0d1820;--card:#1b2c3a;--line:#2a3f50;--text:#e8f0ef;--muted:#9fb3b0;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:var(--paper);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;}
+  .wrap{max-width:620px;margin:0 auto;padding:18px 16px 60px;}
+  header{text-align:center;padding:14px 0;}
+  header h1{font-size:1.5rem;margin:0;color:#fff;}
+  header .sub{color:var(--green);font-style:italic;font-size:.9rem;}
+
+  /* PIN */
+  .gate{max-width:300px;margin:14vh auto 0;text-align:center;}
+  .gate .lock{font-size:2.6rem;}
+  .gate input{width:100%;text-align:center;letter-spacing:.4em;font-size:1.4rem;background:var(--card);border:1px solid var(--line);border-radius:12px;color:#fff;padding:14px;font-family:inherit;margin:14px 0;}
+  .gate input:focus{outline:none;border-color:var(--green);}
+  .err{color:var(--red);font-size:.85rem;min-height:18px;}
+
+  .btn{display:block;width:100%;border:none;border-radius:12px;font-family:inherit;font-weight:700;font-size:1rem;padding:14px;cursor:pointer;text-align:center;}
+  .green{background:var(--green);color:var(--navy);}
+  .ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
+
+  .bars{display:flex;gap:8px;margin:8px 0 16px;}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;}
+  .stat b{display:block;font-size:1.4rem;color:var(--green);}
+  .stat span{font-size:.72rem;color:var(--muted);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .tab{flex:1;background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.85rem;border-radius:999px;padding:9px;cursor:pointer;}
+  .tab.on{border-color:var(--green);color:var(--green);}
+
+  .row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:9px 0;}
+  .row.top1{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;}
+  .pos{flex:0 0 38px;text-align:center;font-size:1.3rem;font-weight:800;color:var(--muted);}
+  .ph{flex:0 0 52px;width:52px;height:52px;border-radius:10px;object-fit:cover;background:var(--navy);border:1px solid var(--line);cursor:pointer;}
+  .info{flex:1;min-width:0;}
+  .info .nm{font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .info .meta{font-size:.78rem;color:var(--muted);}
+  .sc{flex:0 0 auto;text-align:right;}
+  .sc b{font-size:1.25rem;color:var(--green);}
+  .sc span{display:block;font-size:.7rem;color:var(--muted);}
+
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;}
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .lightbox.on{display:flex;}
+  .lightbox img{max-width:100%;max-height:88vh;border-radius:14px;}
+  .hide{display:none;}
+  .reload{margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- PIN -->
+  <div id="gate" class="gate">
+    <div class="lock">🔒</div>
+    <h1 style="font-size:1.2rem;margin:6px 0 0;">Reporte del Quiz</h1>
+    <div style="color:var(--muted);font-size:.85rem;">Introduce el PIN</div>
+    <input id="pin" type="tel" inputmode="numeric" maxlength="8" placeholder="••••">
+    <div class="err" id="pinErr"></div>
+    <button class="btn green" onclick="enter()">Entrar</button>
+  </div>
+
+  <!-- Panel -->
+  <div id="panel" class="hide">
+    <header>
+      <h1>🎓 Quiz de Juanda</h1>
+      <div class="sub">Resultados · orden de llegada y ranking</div>
+    </header>
+
+    <div class="bars">
+      <div class="stat"><b id="stPlayers">0</b><span>jugadores</span></div>
+      <div class="stat"><b id="stBest">–</b><span>mejor puntuación</span></div>
+      <div class="stat"><b id="stAvg">–</b><span>media</span></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" id="tabRank" onclick="setView('rank')">🏆 Ranking</button>
+      <button class="tab" id="tabArr" onclick="setView('arr')">⏱️ Orden de llegada</button>
+    </div>
+
+    <div id="list"></div>
+
+    <button class="btn ghost reload" onclick="load()">🔄 Actualizar</button>
+  </div>
+</div>
+
+<div class="lightbox" id="lb" onclick="this.className='lightbox'"><img id="lbImg" alt=""></div>
+
+<script>
+/* ====== Misma config que el juego (rellenar al crear Supabase) ====== */
+var CFG={
+  SUPABASE_URL:'https://kwikuwlnqpomevtiskta.supabase.co',
+  SUPABASE_ANON:'sb_publishable_AFr8w1i0HUv1ArvbZDuTbg_jXdgkX1K',
+  PIN:'2026'
+};
+
+var DATA=[], VIEW='rank';
+
+function enter(){
+  var v=document.getElementById('pin').value.trim();
+  if(v===CFG.PIN){
+    document.getElementById('gate').className='gate hide';
+    document.getElementById('panel').className='';
+    load();
+  }else{
+    document.getElementById('pinErr').textContent='PIN incorrecto';
+  }
+}
+document.getElementById('pin').addEventListener('keydown',function(e){if(e.key==='Enter')enter();});
+
+function fmtTime(iso){try{return new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+function fmtDate(iso){try{return new Date(iso).toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}catch(e){return '';}}
+
+function load(){
+  if(CFG.SUPABASE_URL.indexOf('XXXX')>-1){
+    document.getElementById('list').innerHTML='<div class="empty">⚙️ Falta conectar Supabase.<br>Claude lo enchufa y aquí aparecerán los resultados.</div>';return;
+  }
+  document.getElementById('list').innerHTML='<div class="empty">Cargando…</div>';
+  fetch(CFG.SUPABASE_URL+'/rest/v1/submissions?select=*&order=finished_at.asc',
+    {headers:{apikey:CFG.SUPABASE_ANON,Authorization:'Bearer '+CFG.SUPABASE_ANON}})
+   .then(function(r){return r.json();})
+   .then(function(d){DATA=Array.isArray(d)?d:[];stats();render();})
+   .catch(function(){document.getElementById('list').innerHTML='<div class="empty">No se pudo cargar. Revisa internet.</div>';});
+}
+
+function stats(){
+  var n=DATA.length;
+  document.getElementById('stPlayers').textContent=n;
+  if(!n){document.getElementById('stBest').textContent='–';document.getElementById('stAvg').textContent='–';return;}
+  var best=0,sum=0,tot=DATA[0].total||16;
+  for(var i=0;i<n;i++){best=Math.max(best,DATA[i].score);sum+=DATA[i].score;}
+  document.getElementById('stBest').textContent=best+'/'+tot;
+  document.getElementById('stAvg').textContent=(Math.round(sum/n*10)/10)+'/'+tot;
+}
+
+function setView(v){VIEW=v;
+  document.getElementById('tabRank').className='tab'+(v==='rank'?' on':'');
+  document.getElementById('tabArr').className='tab'+(v==='arr'?' on':'');
+  render();
+}
+
+function render(){
+  var box=document.getElementById('list');
+  if(!DATA.length){box.innerHTML='<div class="empty">Aún no hay resultados. 🎈</div>';return;}
+  var arr=DATA.slice();
+  if(VIEW==='rank'){
+    // puntuación desc; empate → quien llegó antes (finished_at asc)
+    arr.sort(function(a,b){return (b.score-a.score)|| (new Date(a.finished_at)-new Date(b.finished_at));});
+  }else{
+    arr.sort(function(a,b){return new Date(a.finished_at)-new Date(b.finished_at);});
+  }
+  var html='';
+  for(var i=0;i<arr.length;i++){
+    var s=arr[i],medal;
+    if(VIEW==='rank')medal=(i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1));
+    else medal=(i+1);
+    var photo=s.photo_url?('<img class="ph" src="'+s.photo_url+'" onclick="zoom(\''+s.photo_url+'\')" alt="">'):'<div class="ph"></div>';
+    html+='<div class="row'+(VIEW==='rank'&&i===0?' top1':'')+'">'
+        + '<div class="pos">'+medal+'</div>'+photo
+        + '<div class="info"><div class="nm">'+esc(s.name)+'</div>'
+        + '<div class="meta">🕒 '+fmtTime(s.finished_at)+' · '+fmtDate(s.finished_at)+'</div></div>'
+        + '<div class="sc"><b>'+s.score+'</b><span>de '+(s.total||16)+'</span></div></div>';
+  }
+  box.innerHTML=html;
+}
+function esc(t){var d=document.createElement('div');d.textContent=t||'';return d.innerHTML;}
+function zoom(u){document.getElementById('lbImg').src=u;document.getElementById('lb').className='lightbox on';}
+</script>
+</body>
+</html>

@@ -3,354 +3,471 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz de Juanda 🎓</title>
+<title>¿Cuánto conoces a Juanda? 🎓</title>
 <style>
-  :root{--navy:#142433;--green:#27D17C;--paper:#0d1820;--card:#1b2c3a;--line:#2a3f50;--text:#e8f0ef;--muted:#9fb3b0;}
+  :root{--navy:#142433;--green:#27D17C;--red:#ff5d6c;--paper:#0d1820;--card:#1b2c3a;--line:#2a3f50;--text:#e8f0ef;--muted:#9fb3b0;}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   body{margin:0;background:var(--paper);color:var(--text);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;padding-bottom:40px;}
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;min-height:100vh;}
   #bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
-  .wrap,.counter{position:relative;z-index:1;}
-  .wrap{max-width:680px;margin:0 auto;padding:18px 16px;}
-  header{text-align:center;padding:18px 0 6px;}
-  header h1{font-size:1.7rem;margin:0;color:#fff;}
-  header .sub{color:var(--green);font-style:italic;margin-top:4px;}
-  .intro{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:16px 0;font-size:.95rem;color:var(--muted);}
-  .intro b{color:var(--text);}
-  .counter{position:sticky;top:0;z-index:20;background:rgba(13,24,32,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:12px;}
-  .counter .pill{background:var(--navy);border:1px solid var(--green);color:var(--green);font-weight:700;border-radius:999px;padding:5px 14px;font-size:.9rem;white-space:nowrap;}
-  .counter .bar{flex:1;height:8px;background:var(--navy);border-radius:999px;overflow:hidden;}
-  .counter .fill{height:100%;width:0;background:var(--green);transition:width .25s;}
-  .lang{display:flex;gap:6px;flex:0 0 auto;}
+  .wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;display:flex;flex-direction:column;}
+  .lang{display:flex;gap:6px;justify-content:flex-end;}
   .lbtn{background:var(--navy);border:1px solid var(--line);color:var(--muted);font-family:inherit;font-weight:700;font-size:.8rem;border-radius:999px;padding:5px 10px;cursor:pointer;transition:.15s;}
   .lbtn.on{border-color:var(--green);color:var(--green);}
-  .sect{margin:24px 0 8px;font-size:1.1rem;color:var(--green);border-bottom:1px solid var(--line);padding-bottom:6px;}
-  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;transition:border-color .2s,opacity .2s;}
-  .q.on{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset;}
-  .q.dim{opacity:.5;}
-  .qtop{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
-  .chk{flex:0 0 24px;height:24px;margin-top:2px;border:2px solid var(--line);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--navy);background:transparent;transition:.15s;}
-  .q.on .chk{background:var(--green);border-color:var(--green);}
-  .qtext{font-weight:600;}
-  .qnum{color:var(--green);font-weight:700;}
-  .fields{max-height:0;overflow:hidden;transition:max-height .25s ease;}
-  .q.on .fields{max-height:400px;margin-top:10px;}
-  label{display:block;font-size:.75rem;color:var(--muted);margin:8px 0 3px;text-transform:uppercase;letter-spacing:.5px;}
-  input[type=text]{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:10px 12px;font-size:1rem;font-family:inherit;}
-  input[type=text]:focus{outline:none;border-color:var(--green);}
-  .extra{background:var(--card);border:1px dashed var(--green);border-radius:14px;padding:14px;margin:14px 0;}
-  .extra label{color:var(--green);}
-  .btn{display:block;width:100%;border:none;border-radius:12px;font-family:inherit;font-weight:700;font-size:1.05rem;padding:16px;cursor:pointer;margin:10px 0;text-align:center;text-decoration:none;}
+
+  /* Pantallas */
+  .screen{display:none;flex:1;flex-direction:column;}
+  .screen.on{display:flex;}
+
+  /* Inicio */
+  .start{justify-content:center;text-align:center;gap:8px;padding:18px 0;}
+  .start h1{font-size:1.7rem;margin:0;color:#fff;}
+  .start h2.qz{font-size:1.3rem;margin:0;color:#fff;}
+  .start .sub{color:var(--green);font-style:italic;}
+  .start .subg{color:var(--green);font-style:italic;font-size:.9rem;}
+  .start .badge{font-size:3.4rem;margin:6px 0;}
+  .start p{color:var(--muted);font-size:.95rem;margin:6px auto 18px;max-width:420px;}
+  .hero{display:block;width:auto;max-width:74%;max-height:44vh;margin:2px auto 12px;border-radius:18px;border:2px solid var(--green);box-shadow:0 12px 34px rgba(0,0,0,.55);object-fit:cover;}
+  .save{max-width:300px;margin:4px auto 0;}
+  .divider{height:1px;background:var(--line);width:82%;margin:22px auto;}
+
+  /* Cabecera de juego */
+  .top{display:flex;align-items:center;gap:12px;margin:6px 0 18px;}
+  .pill{background:var(--navy);border:1px solid var(--green);color:var(--green);font-weight:700;border-radius:999px;padding:5px 14px;font-size:.85rem;white-space:nowrap;}
+  .bar{flex:1;height:8px;background:var(--navy);border-radius:999px;overflow:hidden;}
+  .fill{height:100%;width:0;background:var(--green);transition:width .3s;}
+  .score{color:var(--muted);font-size:.85rem;font-weight:700;white-space:nowrap;}
+
+  .qbox{flex:1;display:flex;flex-direction:column;}
+  .qtext{font-size:1.35rem;font-weight:700;color:#fff;margin:10px 0 22px;}
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{background:var(--card);border:1.5px solid var(--line);border-radius:14px;color:var(--text);
+    font-family:inherit;font-size:1.05rem;font-weight:600;padding:16px 18px;text-align:left;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:10px;}
+  .opt:active{transform:scale(.99);}
+  .opt .mk{flex:0 0 auto;font-size:1.2rem;opacity:0;transition:.15s;}
+  .opt.correct{border-color:var(--green);background:rgba(39,209,124,.16);}
+  .opt.correct .mk{opacity:1;}
+  .opt.wrong{border-color:var(--red);background:rgba(255,93,108,.14);}
+  .opt.wrong .mk{opacity:1;}
+  .opt.lock{cursor:default;}
+  .opt.lock:not(.correct):not(.wrong){opacity:.5;}
+
+  .next{margin-top:18px;}
+  .btn{display:block;width:100%;border:none;border-radius:14px;font-family:inherit;font-weight:700;font-size:1.1rem;padding:16px;cursor:pointer;text-align:center;text-decoration:none;}
   .green{background:var(--green);color:var(--navy);}
   .ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
-  .foot{text-align:center;color:var(--muted);font-style:italic;margin:20px 0;}
-  .out{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;font-size:.82rem;color:var(--muted);margin-top:8px;display:none;}
-  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:30px;background:var(--green);color:var(--navy);font-weight:700;padding:10px 18px;border-radius:999px;z-index:40;opacity:0;transition:.3s;pointer-events:none;font-size:.9rem;}
-  .toast.show{opacity:1;}
+  .hide{display:none;}
+
+  /* Fin */
+  .end{justify-content:center;text-align:center;gap:6px;}
+  .end .big{font-size:3.2rem;margin:4px 0;}
+  .end h2{font-size:1.5rem;margin:0;color:#fff;}
+  .end .res{font-size:2.6rem;font-weight:800;color:var(--green);margin:6px 0;}
+  .end .msg{color:var(--muted);margin:0 auto 18px;max-width:420px;}
+  .end .btn{margin-top:8px;}
+  .review{text-align:left;margin:14px 0 4px;}
+  .review .ri{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;font-size:.9rem;}
+  .review .ri .qq{color:var(--muted);font-size:.82rem;}
+  .review .ri .aa{font-weight:700;color:var(--text);margin-top:2px;}
+  .review .ri .ic{font-size:.95rem;}
+  .foot{text-align:center;color:var(--muted);font-style:italic;margin:18px 0 0;}
+  .send{background:var(--card);border:1px dashed var(--green);border-radius:16px;padding:16px;margin:16px 0;text-align:left;}
+  .send .sendTitle{font-weight:700;color:var(--green);margin-bottom:12px;text-align:center;}
+  .send input[type=text]{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:13px 14px;font-size:1rem;font-family:inherit;margin-bottom:10px;}
+  .send input[type=text]:focus{outline:none;border-color:var(--green);}
+  .photo{margin:0 0 10px;}
+  .preview{display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;border:2px solid var(--green);margin-bottom:10px;}
+  .status{text-align:center;color:var(--muted);font-size:.85rem;min-height:18px;margin-bottom:8px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .opt.sel{border-color:var(--green);background:rgba(39,209,124,.12);box-shadow:0 0 0 1px var(--green) inset;}
+  .confirm{margin-top:16px;}
+  .credit{display:block;text-align:center;margin:20px auto 0;font-size:.78rem;color:var(--muted);text-decoration:none;opacity:.85;}
+  .credit b{color:var(--green);font-weight:700;}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
-<div class="counter">
-  <span class="pill"><span id="cnt">0</span><span id="psuf">/15 elegidas</span></span>
-  <div class="bar"><div class="fill" id="fill"></div></div>
+<div class="wrap">
+
   <div class="lang">
     <button id="lang-es" class="lbtn on" type="button" onclick="setLang('es')">🇪🇸 ES</button>
     <button id="lang-sv" class="lbtn" type="button" onclick="setLang('sv')">🇸🇪 SV</button>
   </div>
-</div>
 
-<div class="wrap">
-  <header>
-    <h1 id="h1">Quiz de tu Graduación 🎓</h1>
-    <div class="sub" id="sub">¿Cuánto te conocen de verdad?</div>
-  </header>
-  <div class="intro" id="intro">
-    Juanda, crack: <b>marca 15 preguntas</b> de las 30, escribe la respuesta correcta y, si quieres, 1-2 <b>trampas graciosas</b> para las opciones falsas. Al final pulsa <b>“Enviar a papá”</b>. 💚
+  <!-- INICIO -->
+  <div class="screen start on" id="scrStart">
+    <img class="hero" id="heroImg" src="juanda.jpg" alt="Juanda">
+    <h1 id="sThanks">¡Gracias por acompañarnos! 💚</h1>
+    <div class="sub" id="sThanksMsg">Hoy celebramos la graduación de Juanda. Gracias por compartir con nosotros este día tan especial. 🎓🎸</div>
+    <button class="btn ghost save" id="saveBtn" type="button" onclick="savePhoto()">💾 Guardar la foto</button>
+    <div class="divider"></div>
+    <h2 class="qz" id="sTitle">¿Cuánto conoces a Juanda?</h2>
+    <div class="subg" id="sSub">Quiz · 16 preguntas</div>
+    <p id="sIntro">Juanda ya dio sus respuestas reales. Ahora te toca a ti: ¿de verdad lo conoces? Elige una opción en cada pregunta y descubre tu puntuación. 💚</p>
+    <button class="btn green" id="sBtn" type="button" onclick="startGame()">▶ Empezar</button>
+    <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener"></a>
   </div>
 
-  <div class="sect">🎵 MÚSICA</div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">1.</span> ¿Cuál fue el primer instrumento que aprendió Juanda?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">2.</span> ¿Qué artista/banda escucha en bucle?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">3.</span> ¿Primera canción que aprendió a tocar entera?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">4.</span> ¿Qué género NUNCA pondría en sus playlists?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">5.</span> ¿Canta en la ducha? Y si sí, ¿qué?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">6.</span> Si tuviera que tocar en un solo escenario del mundo, ¿cuál?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-
-  <div class="sect">🌍 IDIOMAS Y GAP YEAR</div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">7.</span> ¿Cuántos idiomas habla y cuáles?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">8.</span> ¿En qué idioma sueña / cuenta los números?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">9.</span> ¿A qué país quiere ir en el gap year?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">10.</span> ¿Qué quiere lograr este año fuera de la música?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">11.</span> La palabra más rara que sabe en otro idioma</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-
-  <div class="sect">😋 GUSTOS Y MANÍAS</div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">12.</span> ¿Comida favorita absoluta?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">13.</span> ¿Comida que odia con toda el alma?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">14.</span> ¿Qué hace cuando está nervioso?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">15.</span> ¿Una manía que vuelve loca a la familia?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">16.</span> ¿Frase que repite todo el tiempo?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">17.</span> ¿Café, té o ninguno? ¿Cómo lo toma?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">18.</span> ¿Madrugador o búho nocturno?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">19.</span> ¿Su mayor miedo (de mentira o de verdad)?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-
-  <div class="sect">👨‍👩‍👦 FAMILIA E INFANCIA</div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">20.</span> ¿Cuál era su apodo de pequeño?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">21.</span> ¿Qué quería ser de grande cuando tenía 6 años?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">22.</span> ¿La travesura más recordada de la familia?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">23.</span> ¿Con qué hermano se peleaba más de chico?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">24.</span> ¿Quién de la familia lo malcría más?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">25.</span> ¿Su recuerdo favorito de la infancia?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-
-  <div class="sect">🎓 EL GRADUADO HOY</div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">26.</span> ¿De qué se graduó exactamente?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">27.</span> ¿La asignatura/materia que más le costó?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">28.</span> ¿Su mayor logro de estos años de estudio?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">29.</span> Si pudiera mandarle un mensaje a su yo de hace 4 años, ¿qué le diría?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-  <div class="q"><div class="qtop"><div class="chk">✓</div><div class="qtext"><span class="qnum">30.</span> ¿Dónde se ve en 5 años?</div></div><div class="fields"><label>Respuesta correcta</label><input type="text" placeholder="La verdad..."><label>Trampas (opcional)</label><input type="text" placeholder="2 respuestas falsas graciosas"></div></div>
-
-  <div class="extra">
-    <label id="extraLabel">➕ Tus propias preguntas (opcional)</label>
-    <div id="extras"></div>
-    <button class="btn ghost" id="extraBtn" type="button" onclick="addExtra()">+ Agregar otra pregunta mía</button>
+  <!-- JUEGO -->
+  <div class="screen" id="scrGame">
+    <div class="top">
+      <span class="pill"><span id="qnum">1</span><span id="qsuf"> / 16</span></span>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <span class="score">✅ <span id="scoreNow">0</span></span>
+    </div>
+    <div class="qbox">
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="confirm hide" id="confirmWrap">
+        <button class="btn green" id="confirmBtn" type="button" onclick="confirmAnswer()"></button>
+      </div>
+      <div class="next hide" id="nextWrap">
+        <button class="btn green" id="nextBtn" type="button" onclick="nextQ()"></button>
+      </div>
+    </div>
   </div>
 
-  <button class="btn green" id="btnSend" type="button" onclick="exportar()">📲 Enviar a papá por WhatsApp</button>
-  <button class="btn ghost" id="btnCopy" type="button" onclick="copiar()">📋 Copiar todo el texto</button>
-  <div class="out" id="out"></div>
+  <!-- FIN -->
+  <div class="screen end" id="scrEnd">
+    <div class="big" id="eEmoji">🎉</div>
+    <h2 id="eTitle"></h2>
+    <div class="res" id="eRes"></div>
+    <div class="msg" id="eMsg"></div>
 
-  <div class="foot" id="foot">¡Felicidades, crack! 💚</div>
+    <div class="send" id="sendPanel">
+      <div class="sendTitle" id="sendTitle"></div>
+      <input type="text" id="pName" maxlength="40" placeholder="">
+      <input type="file" id="pFile" accept="image/*" capture="environment" class="hide">
+      <button class="btn ghost photo" id="photoBtn" type="button" onclick="document.getElementById('pFile').click()"></button>
+      <img id="pPreview" class="preview hide" alt="">
+      <div class="status" id="sStatus"></div>
+      <button class="btn green" id="eShare" type="button" onclick="sendToDad()" disabled></button>
+    </div>
+
+    <div class="review" id="review"></div>
+    <div class="foot" id="eFoot"></div>
+    <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener"></a>
+  </div>
+
+  <!-- BLOQUEADO (ya enviado) -->
+  <div class="screen start" id="scrLocked">
+    <img class="hero" src="juanda.jpg" alt="Juanda">
+    <h1 id="lThanks"></h1>
+    <div class="sub" id="lMsg"></div>
+    <button class="btn ghost save" id="lSave" type="button" onclick="savePhoto()"></button>
+    <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener"></a>
+  </div>
+
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-/* ===== Idiomas (i18n) ===== */
-var I18N={
-  es:{
-    htmlLang:'es',
-    title:'Quiz de Juanda 🎓',
-    h1:'Quiz de tu Graduación 🎓',
-    sub:'¿Cuánto te conocen de verdad?',
-    intro:'Juanda, crack: <b>marca 15 preguntas</b> de las 30, escribe la respuesta correcta y, si quieres, 1-2 <b>trampas graciosas</b> para las opciones falsas. Al final pulsa <b>“Enviar a papá”</b>. 💚',
-    pill:'/15 elegidas',
-    sects:['🎵 MÚSICA','🌍 IDIOMAS Y GAP YEAR','😋 GUSTOS Y MANÍAS','👨‍👩‍👦 FAMILIA E INFANCIA','🎓 EL GRADUADO HOY'],
-    q:[
-      '¿Cuál fue el primer instrumento que aprendió Juanda?',
-      '¿Qué artista/banda escucha en bucle?',
-      '¿Primera canción que aprendió a tocar entera?',
-      '¿Qué género NUNCA pondría en sus playlists?',
-      '¿Canta en la ducha? Y si sí, ¿qué?',
-      'Si tuviera que tocar en un solo escenario del mundo, ¿cuál?',
-      '¿Cuántos idiomas habla y cuáles?',
-      '¿En qué idioma sueña / cuenta los números?',
-      '¿A qué país quiere ir en el gap year?',
-      '¿Qué quiere lograr este año fuera de la música?',
-      'La palabra más rara que sabe en otro idioma',
-      '¿Comida favorita absoluta?',
-      '¿Comida que odia con toda el alma?',
-      '¿Qué hace cuando está nervioso?',
-      '¿Una manía que vuelve loca a la familia?',
-      '¿Frase que repite todo el tiempo?',
-      '¿Café, té o ninguno? ¿Cómo lo toma?',
-      '¿Madrugador o búho nocturno?',
-      '¿Su mayor miedo (de mentira o de verdad)?',
-      '¿Cuál era su apodo de pequeño?',
-      '¿Qué quería ser de grande cuando tenía 6 años?',
-      '¿La travesura más recordada de la familia?',
-      '¿Con qué hermano se peleaba más de chico?',
-      '¿Quién de la familia lo malcría más?',
-      '¿Su recuerdo favorito de la infancia?',
-      '¿De qué se graduó exactamente?',
-      '¿La asignatura/materia que más le costó?',
-      '¿Su mayor logro de estos años de estudio?',
-      'Si pudiera mandarle un mensaje a su yo de hace 4 años, ¿qué le diría?',
-      '¿Dónde se ve en 5 años?'
-    ],
-    lblCorrect:'Respuesta correcta',
-    lblTrap:'Trampas (opcional)',
-    phCorrect:'La verdad...',
-    phTrap:'2 respuestas falsas graciosas',
-    extraLabel:'➕ Tus propias preguntas (opcional)',
-    extraBtn:'+ Agregar otra pregunta mía',
-    btnSend:'📲 Enviar a papá por WhatsApp',
-    btnCopy:'📋 Copiar todo el texto',
-    foot:'¡Felicidades, crack! 💚',
-    msgMax:'Ya tienes 15. Desmarca alguna primero.',
-    exLabel:'Pregunta extra ',
-    exQ:'Tu pregunta...',
-    exA:'Respuesta',
-    exAph:'La respuesta...',
-    outHead:'🎓 QUIZ DE JUANDA — respuestas para papá\n\n',
-    noAns:'(sin responder)',
-    traps:'   ❌ Trampas: ',
-    extraHead:'➕ EXTRA DE JUANDA\n\n',
-    total:'Total elegidas: ',
-    copied:'¡Copiado! Pégalo en WhatsApp'
-  },
-  sv:{
-    htmlLang:'sv',
-    title:'Juandas Quiz 🎓',
-    h1:'Quiz till din examen 🎓',
-    sub:'Hur väl känner de dig egentligen?',
-    intro:'Juanda, snyggt: <b>välj 15 frågor</b> av 30, skriv det rätta svaret och, om du vill, 1-2 <b>roliga lurfrågor</b> som falska alternativ. Tryck till sist på <b>”Skicka till pappa”</b>. 💚',
-    pill:'/15 valda',
-    sects:['🎵 MUSIK','🌍 SPRÅK OCH SABBATSÅR','😋 SMAK OCH OVANOR','👨‍👩‍👦 FAMILJ OCH BARNDOM','🎓 DEN NYEXAMINERADE IDAG'],
-    q:[
-      'Vilket var det första instrumentet Juanda lärde sig?',
-      'Vilken artist/band lyssnar han på på repeat?',
-      'Vilken var första låten han lärde sig spela hela?',
-      'Vilken genre skulle han ALDRIG ha i sina spellistor?',
-      'Sjunger han i duschen? Och i så fall, vad?',
-      'Om han bara fick spela på en enda scen i världen, vilken?',
-      'Hur många språk talar han och vilka?',
-      'På vilket språk drömmer han / räknar siffror?',
-      'Vilket land vill han åka till under sabbatsåret?',
-      'Vad vill han uppnå i år utanför musiken?',
-      'Det konstigaste ordet han kan på ett annat språk',
-      'Absoluta favoritmaten?',
-      'Mat han hatar av hela sin själ?',
-      'Vad gör han när han är nervös?',
-      'En ovana som gör familjen galen?',
-      'En fras han upprepar hela tiden?',
-      'Kaffe, te eller inget? Hur dricker han det?',
-      'Morgonpigg eller nattuggla?',
-      'Hans största rädsla (på låtsas eller på riktigt)?',
-      'Vad var hans smeknamn som liten?',
-      'Vad ville han bli när han var 6 år?',
-      'Familjens mest ihågkomna hyss?',
-      'Med vilket syskon bråkade han mest som liten?',
-      'Vem i familjen skämmer bort honom mest?',
-      'Hans favoritminne från barndomen?',
-      'Vad tog han examen i, exakt?',
-      'Vilket ämne var svårast för honom?',
-      'Hans största bedrift under studieåren?',
-      'Om han kunde skicka ett meddelande till sig själv för 4 år sedan, vad skulle han säga?',
-      'Var ser han sig själv om 5 år?'
-    ],
-    lblCorrect:'Rätt svar',
-    lblTrap:'Lurfrågor (valfritt)',
-    phCorrect:'Sanningen...',
-    phTrap:'2 roliga falska svar',
-    extraLabel:'➕ Dina egna frågor (valfritt)',
-    extraBtn:'+ Lägg till en egen fråga',
-    btnSend:'📲 Skicka till pappa via WhatsApp',
-    btnCopy:'📋 Kopiera all text',
-    foot:'Grattis, mästaren! 💚',
-    msgMax:'Du har redan 15. Avmarkera någon först.',
-    exLabel:'Extra fråga ',
-    exQ:'Din fråga...',
-    exA:'Svar',
-    exAph:'Svaret...',
-    outHead:'🎓 JUANDAS QUIZ — svar till pappa\n\n',
-    noAns:'(ej besvarad)',
-    traps:'   ❌ Lurfrågor: ',
-    extraHead:'➕ JUANDAS EXTRA\n\n',
-    total:'Totalt valda: ',
-    copied:'Kopierat! Klistra in i WhatsApp'
-  }
+/* ============ Configuración (se rellena al crear el Supabase nuevo) ============ */
+var CFG={
+  SUPABASE_URL:'https://kwikuwlnqpomevtiskta.supabase.co',
+  SUPABASE_ANON:'sb_publishable_AFr8w1i0HUv1ArvbZDuTbg_jXdgkX1K',  /* clave pública (segura en el cliente) */
+  BUCKET:'fotos',
+  WHATSAPP:'46707968175',                     /* papá (sin + ni espacios) */
+  PIN:'2026'                                  /* para la página de reporte */
+};
+
+/* ============ Preguntas (respuestas reales de Juanda) ============ */
+/* wrong[] = lurfrågor que él eligió. (*) = trampas inventadas, cámbialas si quieres. */
+var QUESTIONS=[
+ {es:'¿Cuál fue el primer instrumento que aprendió Juanda?', sv:'Vilket var det första instrumentet Juanda lärde sig?',
+  ok:{es:'La flauta',sv:'Flöjt'}, no:[{es:'La guitarra',sv:'Gitarr'},{es:'El piano',sv:'Piano'}]},
+ {es:'¿Qué artista/banda escucha en bucle?', sv:'Vilken artist/band lyssnar han på på repeat?',
+  ok:{es:'Steely Dan',sv:'Steely Dan'}, no:[{es:'Metallica',sv:'Metallica'},{es:'Aventura',sv:'Aventura'}]},
+ {es:'¿Primera canción que aprendió a tocar entera?', sv:'Vilken var första låten han lärde sig spela hela?',
+  ok:{es:'Riptide',sv:'Riptide'}, no:[{es:'Master of Puppets',sv:'Master of Puppets'},{es:'Estrellita dónde estás',sv:'Blinka lilla stjärna'}]},
+ {es:'¿Qué género NUNCA pondría en sus playlists?', sv:'Vilken genre skulle han ALDRIG ha i sina spellistor?',
+  ok:{es:'Ninguno',sv:'Ingen'}, no:[{es:'Pop',sv:'Pop'},{es:'Hardstyle',sv:'Hardstyle'}]},
+ {es:'Si tuviera que tocar en un solo escenario del mundo, ¿cuál?', sv:'Om han bara fick spela på en enda scen i världen, vilken?',
+  ok:{es:'The Sphere, LA',sv:'The Sphere, LA'}, no:[{es:'Wembley Stadium',sv:'Wembley Stadium'},{es:'3 Arena',sv:'3 Arena'}]},
+ {es:'¿A qué país quiere ir en el año sabático?', sv:'Vilket land vill han åka till under sabbatsåret?',
+  ok:{es:'Japón',sv:'Japan'}, no:[{es:'Italia',sv:'Italien'},{es:'España',sv:'Spanien'}]},
+ {es:'¿Comida que odia con toda el alma?', sv:'Mat han hatar av hela sin själ?',
+  ok:{es:'Las lentejas',sv:'Linser'}, no:[{es:'Las judías',sv:'Bönor'},{es:'Los garbanzos',sv:'Kikärter'}]},
+ {es:'¿Una manía que vuelve loca a la familia?', sv:'En ovana som gör familjen galen?',
+  ok:{es:'Dejar los calcetines por todas partes',sv:'Att lämna strumpor överallt'}, no:[{es:'Tocar la guitarra a las 2 de la mañana',sv:'Att spela gitarr kl 2 på natten'},{es:'Llegar tarde',sv:'Att komma sent'}]},
+ {es:'¿Madrugador o búho nocturno?', sv:'Morgonpigg eller nattuggla?',
+  ok:{es:'Búho nocturno',sv:'Nattuggla'}, no:[{es:'Madrugador',sv:'Morgonpigg'}]},
+ {es:'¿Su mayor miedo (de mentira o de verdad)?', sv:'Hans största rädsla (på låtsas eller på riktigt)?',
+  ok:{es:'Las alturas',sv:'Höjder'}, no:[{es:'Que se rompa la guitarra',sv:'Att gitarren går sönder'},{es:'Los payasos',sv:'Clowner'}]},
+ {es:'¿Cuál era su apodo de pequeño?', sv:'Vad var hans smeknamn som liten?',
+  ok:{es:'Pichupi',sv:'Pichupi'}, no:[{es:'El Rayo',sv:'El Rayo'},{es:'Robin Hood',sv:'Robin Hood'}]},
+ {es:'¿Quién de la familia lo malcría más?', sv:'Vem i familjen skämmer bort honom mest?',
+  ok:{es:'Mito',sv:'Mito'}, no:[{es:'Mamá',sv:'Mamma'},{es:'Papá',sv:'Pappa'}]},
+ {es:'¿Su recuerdo favorito de la infancia?', sv:'Hans favoritminne från barndomen?',
+  ok:{es:'Comer Doritos en Dubái',sv:'Äta Doritos i Dubai'}, no:[{es:'Beber champán en París',sv:'Dricka champis i Paris'},{es:'Saltar en la cama elástica en Torrevieja',sv:'Hoppa studsmatta i Torrevieja'}]},
+ {es:'¿Dónde se ve en 5 años?', sv:'Var ser han sig själv om 5 år?',
+  ok:{es:'En la KMH',sv:'På KMH'}, no:[{es:'En un gran escenario',sv:'På en stor scen'},{es:'En Francia',sv:'I Frankrike'}]},
+ /* (*) trampas inventadas */
+ {es:'¿De qué no puede prescindir Juan?', sv:'Vad klarar Juan inte sig utan?',
+  ok:{es:'Calcetines altos blancos',sv:'Vita långa strumpor'}, no:[{es:'Snus',sv:'Snus'},{es:'Su guitarra',sv:'Sin gitarr'}]},
+ {es:'¿Cuál es el videojuego favorito de Juan de todos los tiempos?', sv:'Vilket spel är Juans all time favorite?',
+  ok:{es:'Super Mario Galaxy 2',sv:'Super Mario Galaxy 2'}, no:[{es:'Mario Kart',sv:'Mario Kart'},{es:'Hollow Knight',sv:'Hollow Knight'}]}
+];
+
+/* ============ Textos UI bilingües ============ */
+var UI={
+ es:{lang:'es',title:'¿Cuánto conoces a Juanda? 🎓',
+   sThanks:'¡Gracias por acompañarnos! 💚',
+   sThanksMsg:'Hoy celebramos la graduación de Juanda. Gracias por compartir con nosotros este día tan especial. 🎓🎸',
+   saveBtn:'💾 Guardar la foto',
+   sTitle:'¿Cuánto conoces a Juanda?', sSub:'Quiz · 16 preguntas',
+   sIntro:'Juanda ya dio sus respuestas reales. Ahora te toca a ti: ¿de verdad lo conoces? Elige una opción en cada pregunta y descubre tu puntuación. 💚',
+   sBtn:'▶ Empezar', qsuf:' / 16', next:'Siguiente →', last:'Ver resultado 🎉',
+   confirmBtn:'✓ Confirmar respuesta', creditTxt:'Hecho con 💚 por <b>tu aliada</b>',
+   lThanks:'¡Ya enviaste tu resultado! 💚', lMsg:'Gracias por jugar. El quiz solo se puede hacer una vez 🙂', lSave:'💾 Guardar la foto',
+   eTitle:'¡Terminaste!', eHi:'¡Lo conoces de memoria! 🏆', eMid:'¡Nada mal, le conoces bien! 💚', eLow:'Uy... toca conocerlo mejor 😅',
+   again:'🔄 Jugar otra vez', foot:'¡Felicidades, Juanda! 💚',
+   correct:'Correcto', yours:'Tu respuesta', real:'Real',
+   sendTitle:'📸 Para enviar tu resultado a papá', namePh:'Tu nombre',
+   photoBtn:'📸 Foto con Juanda (obligatoria)', photoChange:'🔄 Cambiar foto',
+   sendBtn:'📲 Enviar a papá', sending:'Subiendo tu foto y resultado…',
+   sent:'¡Enviado a papá! 💚 Gracias por jugar.',
+   errSend:'Uy, no se pudo enviar. Revisa tu internet y reintenta.',
+   needBoth:'Escribe tu nombre y añade la foto para poder enviar.'},
+ sv:{lang:'sv',title:'Hur väl känner du Juanda? 🎓',
+   sThanks:'Tack för att ni firar med oss! 💚',
+   sThanksMsg:'Idag firar vi Juandas examen. Tack för att ni delar denna speciella dag med oss. 🎓🎸',
+   saveBtn:'💾 Spara fotot',
+   sTitle:'Hur väl känner du Juanda?', sSub:'Quiz · 16 frågor',
+   sIntro:'Juanda har redan gett sina riktiga svar. Nu är det din tur: känner du honom på riktigt? Välj ett alternativ på varje fråga och se din poäng. 💚',
+   sBtn:'▶ Starta', qsuf:' / 16', next:'Nästa →', last:'Se resultat 🎉',
+   confirmBtn:'✓ Bekräfta svar', creditTxt:'Skapad med 💚 av <b>tu aliada</b>',
+   lThanks:'Du har redan skickat ditt resultat! 💚', lMsg:'Tack för att du spelade. Quizet kan bara göras en gång 🙂', lSave:'💾 Spara fotot',
+   eTitle:'Klart!', eHi:'Du kan honom utantill! 🏆', eMid:'Inte illa, du känner honom väl! 💚', eLow:'Hoppsan... dags att lära känna honom bättre 😅',
+   again:'🔄 Spela igen', foot:'Grattis, Juanda! 💚',
+   correct:'Rätt', yours:'Ditt svar', real:'Rätt svar',
+   sendTitle:'📸 För att skicka ditt resultat till pappa', namePh:'Ditt namn',
+   photoBtn:'📸 Foto med Juanda (obligatoriskt)', photoChange:'🔄 Byt foto',
+   sendBtn:'📲 Skicka till pappa', sending:'Laddar upp din bild och ditt resultat…',
+   sent:'Skickat till pappa! 💚 Tack för att du spelade.',
+   errSend:'Hoppsan, kunde inte skicka. Kolla internet och försök igen.',
+   needBoth:'Skriv ditt namn och lägg till fotot för att kunna skicka.'}
 };
 var LANG='es';
-function L(){return I18N[LANG];}
-function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-function applyLang(lang){
-  if(!I18N[lang])lang='es';
-  LANG=lang;
-  var t=I18N[lang];
-  document.documentElement.lang=t.htmlLang;
-  document.title=t.title;
-  setText('h1',t.h1);
-  setText('sub',t.sub);
-  document.getElementById('intro').innerHTML=t.intro;
-  setText('psuf',t.pill);
-  setText('extraLabel',t.extraLabel);
-  setText('extraBtn',t.extraBtn);
-  setText('btnSend',t.btnSend);
-  setText('btnCopy',t.btnCopy);
-  setText('foot',t.foot);
-  var sects=document.getElementsByClassName('sect');
-  for(var s=0;s<sects.length;s++)sects[s].textContent=t.sects[s];
-  var qt=document.getElementsByClassName('qtext');
-  for(var i=0;i<qt.length;i++)qt[i].innerHTML='<span class="qnum">'+(i+1)+'.</span> '+t.q[i];
-  var labels=document.querySelectorAll('.q .fields label');
-  for(var l=0;l<labels.length;l++)labels[l].textContent=(l%2===0)?t.lblCorrect:t.lblTrap;
-  var inps=document.querySelectorAll('.q .fields input');
-  for(var p=0;p<inps.length;p++)inps[p].placeholder=(p%2===0)?t.phCorrect:t.phTrap;
-  document.getElementById('lang-es').className='lbtn'+(lang==='es'?' on':'');
-  document.getElementById('lang-sv').className='lbtn'+(lang==='sv'?' on':'');
-  try{localStorage.setItem('quizLang',lang);}catch(e){}
-}
-function setLang(lang){applyLang(lang);}
+function T(){return UI[LANG];}
 
-/* ===== Lógica del quiz ===== */
-var MAX=15;
-var qs=document.getElementsByClassName('q');
-function selected(){var c=0;for(var i=0;i<qs.length;i++)if(qs[i].className.indexOf('on')>-1)c++;return c;}
-function refresh(){
-  var c=selected();
-  document.getElementById('cnt').textContent=c;
-  document.getElementById('fill').style.width=(c/MAX*100)+'%';
-  for(var i=0;i<qs.length;i++){
-    var on=qs[i].className.indexOf('on')>-1;
-    if(!on&&c>=MAX){if(qs[i].className.indexOf('dim')<0)qs[i].className+=' dim';}
-    else qs[i].className=qs[i].className.replace(' dim','');
+/* ============ Estado ============ */
+var idx=0, score=0, answered=false, order=[], results=[];
+var finishedAt='', photoFile=null, sending=false, sent=false;
+
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function show(id){var s=document.getElementsByClassName('screen');for(var i=0;i<s.length;i++)s[i].className=s[i].className.replace(' on','');document.getElementById(id).className+=' on';}
+
+/* ============ Idioma ============ */
+function applyLang(l){
+  if(!UI[l])l='es';LANG=l;var t=UI[l];
+  document.documentElement.lang=t.lang;document.title=t.title;
+  setText('sThanks',t.sThanks);setText('sThanksMsg',t.sThanksMsg);setText('saveBtn',t.saveBtn);
+  setText('sTitle',t.sTitle);setText('sSub',t.sSub);setText('sIntro',t.sIntro);setText('sBtn',t.sBtn);
+  setText('lThanks',t.lThanks);setText('lMsg',t.lMsg);setText('lSave',t.lSave);
+  var cr=document.querySelectorAll('.credit');for(var ci=0;ci<cr.length;ci++)cr[ci].innerHTML=t.creditTxt;
+  setText('qsuf',t.qsuf);
+  document.getElementById('lang-es').className='lbtn'+(l==='es'?' on':'');
+  document.getElementById('lang-sv').className='lbtn'+(l==='sv'?' on':'');
+  try{localStorage.setItem('juegoLang',l);}catch(e){}
+  // si está jugando, re-renderiza la pregunta actual en el nuevo idioma
+  if(document.getElementById('scrGame').className.indexOf('on')>-1 && !answered) renderQ();
+  if(document.getElementById('scrEnd').className.indexOf('on')>-1) renderEnd();
+}
+function setLang(l){applyLang(l);}
+
+/* ============ Juego ============ */
+function startGame(){
+  idx=0;score=0;results=[];
+  // orden fijo de preguntas (en aparición), opciones mezcladas por pregunta
+  order=[];for(var i=0;i<QUESTIONS.length;i++){
+    var opts=[{q:QUESTIONS[i].ok,ok:true}];
+    for(var k=0;k<QUESTIONS[i].no.length;k++)opts.push({q:QUESTIONS[i].no[k],ok:false});
+    order.push({i:i,opts:shuffle(opts)});
   }
+  show('scrGame');renderQ();
 }
-for(var i=0;i<qs.length;i++){
-  (function(el){
-    el.getElementsByClassName('qtop')[0].onclick=function(){
-      var on=el.className.indexOf('on')>-1;
-      if(!on&&selected()>=MAX){toast(L().msgMax);return;}
-      if(on)el.className=el.className.replace(' on','');
-      else el.className+=' on';
-      refresh();
-    };
-  })(qs[i]);
+function renderQ(){
+  answered=false;
+  var cur=order[idx], t=T();
+  setText('qnum',idx+1);
+  setText('scoreNow',score);
+  document.getElementById('fill').style.width=(idx/QUESTIONS.length*100)+'%';
+  setText('qtext',QUESTIONS[cur.i][LANG]);
+  var box=document.getElementById('opts');box.innerHTML='';
+  for(var o=0;o<cur.opts.length;o++){
+    (function(opt){
+      var b=document.createElement('button');b.className='opt';b.type='button';
+      b.innerHTML='<span class="mk"></span><span>'+opt.q[LANG]+'</span>';
+      b.onclick=function(){selectOpt(b,opt);};
+      box.appendChild(b);
+    })(cur.opts[o]);
+  }
+  pendingOpt=null;
+  document.getElementById('confirmWrap').className='confirm hide';
+  document.getElementById('confirmBtn').textContent=t.confirmBtn;
+  var nw=document.getElementById('nextWrap');nw.className='next hide';
+  document.getElementById('nextBtn').textContent=(idx===QUESTIONS.length-1)?t.last:t.next;
 }
-var ex=0;
-function addExtra(){
-  ex++;
-  var t=L();
-  var d=document.createElement('div');d.style.marginBottom='10px';
-  d.innerHTML='<label>'+t.exLabel+ex+'</label><input type="text" class="exq" placeholder="'+t.exQ+'"><label>'+t.exA+'</label><input type="text" class="exr" placeholder="'+t.exAph+'">';
-  document.getElementById('extras').appendChild(d);
+var pendingOpt=null;
+function selectOpt(btn,opt){
+  if(answered)return;
+  pendingOpt={btn:btn,opt:opt};
+  var kids=document.querySelectorAll('#opts .opt');
+  for(var i=0;i<kids.length;i++)kids[i].className='opt';
+  btn.className='opt sel';
+  document.getElementById('confirmWrap').className='confirm';
 }
-function buildText(){
-  var t=L();
-  var out=t.outHead,i=1;
-  for(var k=0;k<qs.length;k++){
-    if(qs[k].className.indexOf('on')>-1){
-      var qtxt=qs[k].getElementsByClassName('qtext')[0].textContent.replace(/^\s*\d+\.\s*/,'').trim();
-      var inputs=qs[k].getElementsByTagName('input');
-      var r=inputs[0].value.replace(/^\s+|\s+$/g,''),tr=inputs[1].value.replace(/^\s+|\s+$/g,'');
-      out+=i+". "+qtxt+"\n   ✅ "+(r||t.noAns)+"\n";
-      if(tr)out+=t.traps+tr+"\n";
-      out+="\n";i++;
+function confirmAnswer(){
+  if(answered||!pendingOpt)return;answered=true;
+  document.getElementById('confirmWrap').className='confirm hide';
+  var btn=pendingOpt.btn,opt=pendingOpt.opt;
+  var kids=document.querySelectorAll('#opts .opt');
+  for(var i=0;i<kids.length;i++)kids[i].className='opt lock';
+  if(opt.ok){
+    btn.className='opt lock correct';btn.getElementsByClassName('mk')[0].textContent='✅';
+    score++;setText('scoreNow',score);
+  }else{
+    btn.className='opt lock wrong';btn.getElementsByClassName('mk')[0].textContent='❌';
+    // marcar la correcta
+    for(var j=0;j<kids.length;j++){
+      if(kids[j].getElementsByTagName('span')[1].textContent===QUESTIONS[order[idx].i].ok[LANG]){
+        kids[j].className='opt lock correct';kids[j].getElementsByClassName('mk')[0].textContent='✅';
+      }
     }
   }
-  var eq=document.getElementsByClassName('exq'),er=document.getElementsByClassName('exr'),exTxt="";
-  for(var e=0;e<eq.length;e++){
-    var v=eq[e].value.replace(/^\s+|\s+$/g,'');
-    if(v){exTxt+=i+". "+v+"\n   ✅ "+(er[e].value.replace(/^\s+|\s+$/g,'')||t.noAns)+"\n\n";i++;}
+  results.push({i:order[idx].i, ok:opt.ok, picked:opt.q});
+  document.getElementById('nextWrap').className='next';
+}
+function nextQ(){
+  if(idx<QUESTIONS.length-1){idx++;renderQ();}
+  else{freshEnd();saveRecord(false);renderEnd();show('scrEnd');}
+}
+function renderEnd(){
+  var t=T();var n=QUESTIONS.length;
+  setText('eTitle',t.eTitle);
+  setText('eRes',score+' / '+n);
+  var pct=score/n, msg, emo;
+  if(pct>=0.8){msg=t.eHi;emo='🏆';}else if(pct>=0.5){msg=t.eMid;emo='💚';}else{msg=t.eLow;emo='😅';}
+  setText('eMsg',msg);setText('eEmoji',emo);
+  setText('eFoot',t.foot);
+  setText('eShare',t.sendBtn);setText('sendTitle',t.sendTitle);
+  var nameEl=document.getElementById('pName');if(nameEl)nameEl.placeholder=t.namePh;
+  document.getElementById('photoBtn').textContent=photoFile?t.photoChange:t.photoBtn;
+  setStatus(sent?t.sent:'');
+  document.getElementById('eShare').disabled=sent?true:!((nameEl&&nameEl.value.trim())&&photoFile);
+  // repaso
+  var rv=document.getElementById('review');rv.innerHTML='';
+  for(var r=0;r<results.length;r++){
+    var R=results[r],Q=QUESTIONS[R.i];
+    var d=document.createElement('div');d.className='ri';
+    var html='<div class="qq">'+(r+1)+'. '+Q[LANG]+'</div>';
+    if(R.ok){html+='<div class="aa"><span class="ic">✅</span> '+Q.ok[LANG]+'</div>';}
+    else{html+='<div class="aa"><span class="ic">❌</span> '+t.yours+': '+R.picked[LANG]+'</div>'
+            +'<div class="aa" style="color:var(--green)"><span class="ic">✔</span> '+t.real+': '+Q.ok[LANG]+'</div>';}
+    d.innerHTML=html;rv.appendChild(d);
   }
-  if(exTxt)out+=t.extraHead+exTxt;
-  out+=t.total+(i-1);
-  return out;
 }
-function exportar(){window.location.href='https://wa.me/?text='+encodeURIComponent(buildText());}
-function copiar(){
-  var txt=buildText(),o=document.getElementById('out');
-  o.style.display='block';o.textContent=txt;
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt);}
-  toast(L().copied);o.scrollIntoView({behavior:'smooth'});
+/* ---- Envío a papá: foto obligatoria → guardar en Supabase → avisar por WhatsApp ---- */
+function setStatus(s){setText('sStatus',s);}
+function checkReady(){
+  if(sent)return;
+  var nm=document.getElementById('pName').value.trim();
+  document.getElementById('eShare').disabled=!(nm.length>0&&!!photoFile);
 }
-function toast(m){var t=document.getElementById('toast');t.textContent=m;t.className='toast show';clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast';},2200);}
+function compress(file,cb){
+  var img=new Image(),url=URL.createObjectURL(file);
+  img.onload=function(){
+    var max=1080,w=img.width,h=img.height;
+    if(w>h&&w>max){h=Math.round(h*max/w);w=max;}else if(h>=w&&h>max){w=Math.round(w*max/h);h=max;}
+    var c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    c.toBlob(function(b){URL.revokeObjectURL(url);cb(b||file);},'image/jpeg',0.72);
+  };
+  img.onerror=function(){URL.revokeObjectURL(url);cb(file);};
+  img.src=url;
+}
+function freshEnd(){
+  finishedAt=new Date().toISOString();sent=false;sending=false;photoFile=null;
+  var n=document.getElementById('pName');if(n)n.value='';
+  var p=document.getElementById('pPreview');if(p){p.className='preview hide';p.removeAttribute('src');}
+  var f=document.getElementById('pFile');if(f)f.value='';
+}
+function onPhoto(e){
+  var f=e.target.files&&e.target.files[0];if(!f)return;
+  setStatus('…');
+  compress(f,function(blob){
+    photoFile=blob;
+    var img=document.getElementById('pPreview');
+    img.src=URL.createObjectURL(blob);img.className='preview';
+    document.getElementById('photoBtn').textContent=T().photoChange;
+    setStatus('');checkReady();
+  });
+}
+function sendToDad(){
+  if(sending||sent)return;
+  var nm=document.getElementById('pName').value.trim();
+  if(!nm||!photoFile){setStatus(T().needBoth);return;}
+  if(CFG.SUPABASE_URL.indexOf('XXXX')>-1){setStatus('⚙️ Falta conectar Supabase (lo hace Claude).');return;}
+  sending=true;document.getElementById('eShare').disabled=true;setStatus(T().sending);
+  var ts=finishedAt,safe=(nm.replace(/[^a-z0-9]/gi,'_').toLowerCase().slice(0,24)||'jugador');
+  var path=ts.replace(/[:.]/g,'-')+'_'+safe+'.jpg';
+  var H={apikey:CFG.SUPABASE_ANON,Authorization:'Bearer '+CFG.SUPABASE_ANON};
+  fetch(CFG.SUPABASE_URL+'/storage/v1/object/'+CFG.BUCKET+'/'+path,
+    {method:'POST',headers:Object.assign({'Content-Type':'image/jpeg','x-upsert':'true'},H),body:photoFile})
+   .then(function(r){if(!r.ok)throw 0;
+     var url=CFG.SUPABASE_URL+'/storage/v1/object/public/'+CFG.BUCKET+'/'+path;
+     return fetch(CFG.SUPABASE_URL+'/rest/v1/submissions',
+       {method:'POST',headers:Object.assign({'Content-Type':'application/json',Prefer:'return=minimal'},H),
+        body:JSON.stringify({name:nm,score:score,total:QUESTIONS.length,lang:LANG,finished_at:ts,photo_url:url})})
+       .then(function(r2){if(!r2.ok)throw 0;});})
+   .then(function(){sent=true;sending=false;saveRecord(true);setStatus(T().sent);shareToDad(nm);})
+   .catch(function(){sending=false;document.getElementById('eShare').disabled=false;setStatus(T().errSend);});
+}
+function shareToDad(nm){
+  var hora=new Date(finishedAt).toLocaleTimeString(LANG==='sv'?'sv-SE':'es-ES',{hour:'2-digit',minute:'2-digit'});
+  var txt=(LANG==='sv'?'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' i Juandas quiz\n🕒 '+hora
+                      :'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' en el quiz de Juanda\n🕒 '+hora);
+  try{
+    var file=new File([photoFile],'juanda.jpg',{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text:txt}).catch(function(){});return;}
+  }catch(e){}
+  window.open('https://wa.me/'+CFG.WHATSAPP+'?text='+encodeURIComponent(txt),'_blank');
+}
+/* Guarda en el móvil que ya jugó/envió (anti-repetición) */
+function saveRecord(sentFlag){
+  try{
+    var el=document.getElementById('pName');var nm=(el&&el.value.trim())||'';
+    localStorage.setItem('juanda_v1',JSON.stringify({done:true,sent:!!sentFlag,name:nm,score:score,results:results,finishedAt:finishedAt}));
+  }catch(e){}
+}
 
-/* Idioma inicial: recordado o español por defecto */
-(function(){var saved='es';try{saved=localStorage.getItem('quizLang')||'es';}catch(e){}applyLang(saved);})();
+/* Guardar la foto de Juanda (compartir en móvil → Fotos; descargar en escritorio) */
+function savePhoto(){
+  fetch('juanda.jpg').then(function(r){return r.blob();}).then(function(b){
+    try{
+      var file=new File([b],'Juanda-graduacion.jpg',{type:b.type||'image/jpeg'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(function(){});return;}
+    }catch(e){}
+    var u=URL.createObjectURL(b),a=document.createElement('a');
+    a.href=u;a.download='Juanda-graduacion.jpg';document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u);},1500);
+  }).catch(function(){window.open('juanda.jpg','_blank');});
+}
 
-/* ===== Fondo animado de notas ===== */
+/* Idioma inicial + anti-repetición (estado guardado en el móvil) */
+(function(){
+  var s='es';try{s=localStorage.getItem('juegoLang')||'es';}catch(e){}applyLang(s);
+  var rec=null;try{rec=JSON.parse(localStorage.getItem('juanda_v1')||'null');}catch(e){}
+  if(rec&&rec.sent){show('scrLocked');}
+  else if(rec&&rec.done){score=rec.score||0;results=rec.results||[];finishedAt=rec.finishedAt||new Date().toISOString();sent=false;photoFile=null;renderEnd();show('scrEnd');}
+})();
+
+/* Eventos del panel de envío */
+document.getElementById('pName').oninput=checkReady;
+document.getElementById('pFile').onchange=onPhoto;
+
+/* ============ Fondo animado de notas (igual que el quiz) ============ */
 (function(){
   var cv=document.getElementById('bg');if(!cv||!cv.getContext)return;
   var ctx=cv.getContext('2d'),W,H,DPR;

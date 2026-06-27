@@ -79,6 +79,10 @@
   .preview{display:block;width:100%;max-height:280px;object-fit:cover;border-radius:12px;border:2px solid var(--green);margin-bottom:10px;}
   .status{text-align:center;color:var(--muted);font-size:.85rem;min-height:18px;margin-bottom:8px;}
   .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .wa{background:#25D366;color:#0b2e1a;margin-top:4px;}
+  .keep{background:linear-gradient(135deg,#ffce54,#27D17C);color:#0d1820;margin-top:4px;}
+  .keepWrap{margin-top:12px;}
+  #keepImg{max-height:none;height:auto;width:100%;object-fit:contain;border:2px solid var(--green);border-radius:14px;}
   .opt.sel{border-color:var(--green);background:rgba(39,209,124,.12);box-shadow:0 0 0 1px var(--green) inset;}
   .confirm{margin-top:16px;}
   .credit{display:block;text-align:center;margin:20px auto 0;font-size:.78rem;color:var(--muted);text-decoration:none;opacity:.85;}
@@ -142,6 +146,12 @@
       <img id="pPreview" class="preview hide" alt="">
       <div class="status" id="sStatus"></div>
       <button class="btn green" id="eShare" type="button" onclick="sendToDad()" disabled></button>
+      <button class="btn wa hide" id="waBtn" type="button" onclick="pingDad()"></button>
+      <button class="btn keep" id="keepBtn" type="button" onclick="makeKeepsake()" disabled></button>
+      <div class="keepWrap hide" id="keepWrap">
+        <img id="keepImg" class="preview" alt="">
+        <button class="btn green" id="keepSave" type="button" onclick="saveKeepsake()"></button>
+      </div>
     </div>
 
     <div class="review" id="review"></div>
@@ -166,8 +176,12 @@ var CFG={
   SUPABASE_URL:'https://kwikuwlnqpomevtiskta.supabase.co',
   SUPABASE_ANON:'sb_publishable_AFr8w1i0HUv1ArvbZDuTbg_jXdgkX1K',  /* clave pública (segura en el cliente) */
   BUCKET:'fotos',
-  WHATSAPP:'46707968175',                     /* papá (sin + ni espacios) */
-  PIN:'2026'                                  /* para la página de reporte */
+  WHATSAPP:'46707968175',                     /* papá (sin + ni espacios) — el aviso llega aquí */
+  PIN:'2026',                                 /* para la página de reporte */
+  /* Texto de la FOTO RECUERDO (edítalo libremente) */
+  KEEPSAKE_TITLE:'🎓 STUDENTEN 2026',
+  KEEPSAKE_SUB:'Grattis Juanda!',
+  KEEPSAKE_DATE:'Juni 2026'
 };
 
 /* ============ Preguntas (respuestas reales de Juanda) ============ */
@@ -227,7 +241,9 @@ var UI={
    sendBtn:'📲 Enviar a papá', sending:'Subiendo tu foto y resultado…',
    sent:'¡Enviado a papá! 💚 Gracias por jugar.',
    errSend:'Uy, no se pudo enviar. Revisa tu internet y reintenta.',
-   needBoth:'Escribe tu nombre y añade la foto para poder enviar.'},
+   needBoth:'Escribe tu nombre y añade la foto para poder enviar.',
+   waBtn:'📲 Avisar a papá por WhatsApp', keepBtn:'✨ Crear foto recuerdo',
+   keepSave:'💾 Guardar recuerdo', keepMaking:'Creando tu recuerdo…'},
  sv:{lang:'sv',title:'Hur väl känner du Juanda? 🎓',
    sThanks:'Tack för att ni firar med oss! 💚',
    sThanksMsg:'Idag firar vi att Juanda tar studenten. Tack för att ni delar denna speciella dag med oss. 🎓🎸',
@@ -245,14 +261,16 @@ var UI={
    sendBtn:'📲 Skicka till pappa', sending:'Laddar upp din bild och ditt resultat…',
    sent:'Skickat till pappa! 💚 Tack för att du spelade.',
    errSend:'Hoppsan, kunde inte skicka. Kolla internet och försök igen.',
-   needBoth:'Skriv ditt namn och lägg till fotot för att kunna skicka.'}
+   needBoth:'Skriv ditt namn och lägg till fotot för att kunna skicka.',
+   waBtn:'📲 Meddela pappa via WhatsApp', keepBtn:'✨ Skapa minnesbild',
+   keepSave:'💾 Spara minnet', keepMaking:'Skapar din minnesbild…'}
 };
 var LANG='es';
 function T(){return UI[LANG];}
 
 /* ============ Estado ============ */
 var idx=0, score=0, answered=false, order=[], results=[];
-var finishedAt='', photoFile=null, sending=false, sent=false;
+var finishedAt='', photoFile=null, sending=false, sent=false, keepBlob=null, savedName='';
 
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
@@ -356,6 +374,8 @@ function renderEnd(){
   document.getElementById('photoBtn').textContent=photoFile?t.photoChange:t.photoBtn;
   setStatus(sent?t.sent:'');
   document.getElementById('eShare').disabled=sent?true:!((nameEl&&nameEl.value.trim())&&photoFile);
+  setText('keepBtn',t.keepBtn);setText('keepSave',t.keepSave);setText('waBtn',t.waBtn);
+  document.getElementById('keepBtn').disabled=!photoFile;
   // repaso
   var rv=document.getElementById('review');rv.innerHTML='';
   for(var r=0;r<results.length;r++){
@@ -388,10 +408,13 @@ function compress(file,cb){
   img.src=url;
 }
 function freshEnd(){
-  finishedAt=new Date().toISOString();sent=false;sending=false;photoFile=null;
+  finishedAt=new Date().toISOString();sent=false;sending=false;photoFile=null;keepBlob=null;savedName='';
   var n=document.getElementById('pName');if(n)n.value='';
   var p=document.getElementById('pPreview');if(p){p.className='preview hide';p.removeAttribute('src');}
   var f=document.getElementById('pFile');if(f)f.value='';
+  var kw=document.getElementById('keepWrap');if(kw)kw.className='keepWrap hide';
+  var ki=document.getElementById('keepImg');if(ki)ki.removeAttribute('src');
+  var wb=document.getElementById('waBtn');if(wb)wb.className='btn wa hide';
 }
 function onPhoto(e){
   var f=e.target.files&&e.target.files[0];if(!f)return;
@@ -401,6 +424,7 @@ function onPhoto(e){
     var img=document.getElementById('pPreview');
     img.src=URL.createObjectURL(blob);img.className='preview';
     document.getElementById('photoBtn').textContent=T().photoChange;
+    document.getElementById('keepBtn').disabled=false;
     setStatus('');checkReady();
   });
 }
@@ -421,18 +445,83 @@ function sendToDad(){
        {method:'POST',headers:Object.assign({'Content-Type':'application/json',Prefer:'return=minimal'},H),
         body:JSON.stringify({name:nm,score:score,total:QUESTIONS.length,lang:LANG,finished_at:ts,photo_url:url})})
        .then(function(r2){if(!r2.ok)throw 0;});})
-   .then(function(){sent=true;sending=false;saveRecord(true);setStatus(T().sent);shareToDad(nm);})
+   .then(function(){sent=true;sending=false;savedName=nm;saveRecord(true);setStatus(T().sent);
+     document.getElementById('eShare').disabled=true;
+     document.getElementById('waBtn').className='btn wa';   // revelar "avisar a papá"
+     makeKeepsake();})                                       // generar recuerdo automáticamente
    .catch(function(){sending=false;document.getElementById('eShare').disabled=false;setStatus(T().errSend);});
 }
+function pingDad(){shareToDad(savedName||(document.getElementById('pName').value.trim())||'');}
 function shareToDad(nm){
   var hora=new Date(finishedAt).toLocaleTimeString(LANG==='sv'?'sv-SE':'es-ES',{hour:'2-digit',minute:'2-digit'});
-  var txt=(LANG==='sv'?'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' i Juandas quiz\n🕒 '+hora
-                      :'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' en el quiz de Juanda\n🕒 '+hora);
-  try{
-    var file=new File([photoFile],'juanda.jpg',{type:'image/jpeg'});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],text:txt}).catch(function(){});return;}
-  }catch(e){}
+  var txt=(LANG==='sv'?'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' i Juandas quiz · 🕒 '+hora
+                      :'🎓 '+nm+' — '+score+'/'+QUESTIONS.length+' en el quiz de Juanda · 🕒 '+hora);
+  // abre el chat de papá (su número) con el aviso → el aviso le llega a él
   window.open('https://wa.me/'+CFG.WHATSAPP+'?text='+encodeURIComponent(txt),'_blank');
+}
+
+/* ---- Foto recuerdo: compone la foto del jugador con marco de student + fecha ---- */
+function drawCover(x,img,dx,dy,dw,dh){
+  var ir=img.width/img.height, r=dw/dh, sw,sh,sx,sy;
+  if(ir>r){sh=img.height;sw=sh*r;sx=(img.width-sw)/2;sy=0;}
+  else{sw=img.width;sh=sw/r;sx=0;sy=(img.height-sh)/2;}
+  x.drawImage(img,sx,sy,sw,sh,dx,dy,dw,dh);
+}
+function buildKeepsake(cb){
+  if(!photoFile){cb(null);return;}
+  var img=new Image(),url=URL.createObjectURL(photoFile);
+  img.onload=function(){
+    var W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;
+    var x=c.getContext('2d');
+    // 1) foto a sangre completa
+    drawCover(x,img,0,0,W,H);
+    // 2) degradado inferior para que el texto se lea sobre cualquier foto
+    var g=x.createLinearGradient(0,H*0.50,0,H);
+    g.addColorStop(0,'rgba(8,14,20,0)');g.addColorStop(0.55,'rgba(8,14,20,0.45)');g.addColorStop(1,'rgba(8,14,20,0.94)');
+    x.fillStyle=g;x.fillRect(0,H*0.50,W,H*0.50);
+    // 3) marco fino estilo copia fotográfica
+    x.strokeStyle='rgba(255,255,255,0.85)';x.lineWidth=4;x.strokeRect(38,38,W-76,H-76);
+    // 4) texto sobrepuesto (caption de fotógrafo) con sombra
+    x.textAlign='center';
+    x.shadowColor='rgba(0,0,0,0.6)';x.shadowBlur=18;x.shadowOffsetY=3;
+    var title=CFG.KEEPSAKE_TITLE,tpx=92;x.font='800 '+tpx+'px Georgia,"Times New Roman",serif';
+    while(x.measureText(title).width>W-130&&tpx>40){tpx-=2;x.font='800 '+tpx+'px Georgia,serif';}
+    x.fillStyle='#ffffff';x.fillText(title,W/2,H-205);
+    x.fillStyle='#9ff0c4';x.font='italic 600 56px Georgia,serif';
+    x.fillText(CFG.KEEPSAKE_SUB,W/2,H-138);
+    x.shadowBlur=10;
+    x.fillStyle='#e8f0ef';x.font='400 38px Georgia,serif';
+    x.fillText(CFG.KEEPSAKE_DATE,W/2,H-86);
+    x.shadowColor='transparent';x.shadowBlur=0;x.shadowOffsetY=0;
+    x.fillStyle='rgba(255,255,255,0.72)';x.font='400 24px system-ui,sans-serif';
+    x.fillText('tu aliada · tualiada.es',W/2,H-50);
+    c.toBlob(function(b){URL.revokeObjectURL(url);cb(b,c.toDataURL('image/jpeg',0.9));},'image/jpeg',0.92);
+  };
+  img.onerror=function(){URL.revokeObjectURL(url);cb(null);};
+  img.src=url;
+}
+function makeKeepsake(){
+  if(!photoFile)return;
+  var kb=document.getElementById('keepBtn');kb.disabled=true;var prev=kb.textContent;kb.textContent=T().keepMaking;
+  buildKeepsake(function(blob,dataUrl){
+    kb.disabled=false;kb.textContent=prev;
+    if(!blob)return;
+    keepBlob=blob;
+    document.getElementById('keepImg').src=dataUrl;
+    document.getElementById('keepWrap').className='keepWrap';
+    document.getElementById('keepSave').textContent=T().keepSave;
+    document.getElementById('keepWrap').scrollIntoView({behavior:'smooth'});
+  });
+}
+function saveKeepsake(){
+  if(!keepBlob)return;
+  try{
+    var file=new File([keepBlob],'Recuerdo-Juanda-Studenten.jpg',{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(function(){});return;}
+  }catch(e){}
+  var u=URL.createObjectURL(keepBlob),a=document.createElement('a');
+  a.href=u;a.download='Recuerdo-Juanda-Studenten.jpg';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(u);},1500);
 }
 /* Guarda en el móvil que ya jugó/envió (anti-repetición) */
 function saveRecord(sentFlag){

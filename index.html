@@ -87,10 +87,46 @@
   .confirm{margin-top:16px;}
   .credit{display:block;text-align:center;margin:20px auto 0;font-size:.78rem;color:var(--muted);text-decoration:none;opacity:.85;}
   .credit b{color:var(--green);font-weight:700;}
+  /* Tour guiado de ventas */
+  .tourOverlay{position:fixed;inset:0;z-index:60;background:rgba(8,16,22,.93);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:20px;}
+  .tourOverlay.on{display:flex;}
+  .tourCard{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:420px;width:100%;padding:22px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.55);}
+  .tourTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .tourTop .tlang{display:flex;gap:5px;}
+  .tourSkip{background:none;border:none;color:var(--muted);font-family:inherit;font-size:.82rem;cursor:pointer;}
+  .tourCard .te{font-size:3.3rem;line-height:1;margin:6px 0 8px;}
+  .tourCard h3{font-size:1.35rem;color:#fff;margin:4px 0 8px;}
+  .tourCard p{color:var(--muted);margin:0 0 16px;font-size:1rem;min-height:1.4em;}
+  .tlisten{background:var(--navy);border:1px solid var(--line);color:var(--green);font-family:inherit;font-weight:700;border-radius:999px;padding:7px 14px;font-size:.85rem;cursor:pointer;margin-bottom:14px;}
+  .tourDots{display:flex;gap:6px;justify-content:center;margin:0 0 16px;}
+  .tourDots i{width:7px;height:7px;border-radius:999px;background:var(--line);display:block;transition:.2s;}
+  .tourDots i.on{background:var(--green);width:18px;}
+  .tourNav{display:flex;flex-direction:column;gap:10px;}
+  .tourNav .btn{margin:0;}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
+
+<!-- TOUR GUIADO DE VENTAS (?tour=1) -->
+<div class="tourOverlay" id="tour">
+  <div class="tourCard">
+    <div class="tourTop">
+      <div class="tlang">
+        <button class="lbtn" id="t-es" type="button" onclick="setLang('es')">🇪🇸 ES</button>
+        <button class="lbtn" id="t-sv" type="button" onclick="setLang('sv')">🇸🇪 SV</button>
+        <button class="lbtn" id="t-en" type="button" onclick="setLang('en')">🇬🇧 EN</button>
+      </div>
+      <button class="tourSkip" id="tSkip" type="button" onclick="closeTour()"></button>
+    </div>
+    <div class="te" id="tEmoji">👋</div>
+    <h3 id="tTitle"></h3>
+    <p id="tText"></p>
+    <button class="tlisten" id="tListen" type="button" onclick="toggleListen()"></button>
+    <div class="tourDots" id="tDots"></div>
+    <div class="tourNav" id="tNav"></div>
+  </div>
+</div>
 <div class="wrap">
 
   <div class="lang">
@@ -292,7 +328,8 @@ function T(){return UI[LANG];}
 /* ============ Estado ============ */
 var idx=0, score=0, answered=false, order=[], results=[];
 var finishedAt='', photoFile=null, sending=false, sent=false, keepBlob=null, savedName='';
-var DEMO=/[?&]demo\b/.test(location.search); /* modo demostración: siempre fresco, no guarda ni envía nada real */
+var TOUR=/[?&]tour\b/.test(location.search); /* tour guiado de ventas */
+var DEMO=/[?&]demo\b/.test(location.search) || TOUR; /* modo demostración: siempre fresco, no guarda ni envía nada real */
 
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
@@ -310,12 +347,83 @@ function applyLang(l){
   document.getElementById('lang-es').className='lbtn'+(l==='es'?' on':'');
   document.getElementById('lang-sv').className='lbtn'+(l==='sv'?' on':'');
   document.getElementById('lang-en').className='lbtn'+(l==='en'?' on':'');
+  var tl=['es','sv','en'];for(var ti=0;ti<tl.length;ti++){var tb=document.getElementById('t-'+tl[ti]);if(tb)tb.className='lbtn'+(l===tl[ti]?' on':'');}
+  var tov=document.getElementById('tour');if(tov&&tov.className.indexOf('on')>-1)renderTour();
   try{localStorage.setItem('juegoLang',l);}catch(e){}
   // si está jugando, re-renderiza la pregunta actual en el nuevo idioma
   if(document.getElementById('scrGame').className.indexOf('on')>-1 && !answered) renderQ();
   if(document.getElementById('scrEnd').className.indexOf('on')>-1) renderEnd();
 }
 function setLang(l){applyLang(l);}
+
+/* ============ Tour guiado de ventas (?tour=1) ============ */
+var TOURS={
+ es:{start:'▶ Empezar',next:'Siguiente →',back:'← Atrás',listen:'🔊 Escuchar',stop:'⏸ Parar',skip:'Saltar ✕',
+   ctaTitle:'¿List@ para verlo?',ctaPlay:'▶ Probar el juego',ctaTalk:'💬 Hablar con tu aliada',
+   steps:[
+     {e:'👋',t:'¿Qué es esto?',d:'Un juego para tus eventos. Te lo enseño en 30 segundos.'},
+     {e:'📲',t:'Tus invitados escanean un QR',d:'Sin instalar nada: el juego se abre en su móvil al instante.'},
+     {e:'🎯',t:'Juegan: ¿cuánto conocen al homenajeado?',d:'Preguntas reales y respuestas "trampa". Risas aseguradas.'},
+     {e:'📸',t:'Se hacen su foto-recuerdo',d:'Una foto con el homenajeado, enmarcada y lista para guardar.'},
+     {e:'🏆',t:'Tú ves el ranking en vivo',d:'Quién gana, fotos y resultados, en tu panel privado.'},
+     {e:'✨',t:'Todo personalizado para tu evento',d:'Boda, graduación, cumpleaños, despedida… y en tu idioma.'}
+   ]},
+ sv:{start:'▶ Starta',next:'Nästa →',back:'← Tillbaka',listen:'🔊 Lyssna',stop:'⏸ Stoppa',skip:'Hoppa över ✕',
+   ctaTitle:'Redo att se det?',ctaPlay:'▶ Testa spelet',ctaTalk:'💬 Prata med tu aliada',
+   steps:[
+     {e:'👋',t:'Vad är detta?',d:'Ett spel för dina fester. Jag visar dig på 30 sekunder.'},
+     {e:'📲',t:'Dina gäster skannar en QR-kod',d:'Inget att installera — spelet öppnas direkt i mobilen.'},
+     {e:'🎯',t:'De spelar: hur väl känner de den som firas?',d:'Riktiga frågor och lurfrågor. Skratt garanterat.'},
+     {e:'📸',t:'De tar sin minnesbild',d:'Ett foto med den som firas, inramat och redo att spara.'},
+     {e:'🏆',t:'Du ser live-rankingen',d:'Vem som leder, foton och resultat i din privata panel.'},
+     {e:'✨',t:'Allt anpassat för din fest',d:'Bröllop, studenten, kalas, svensexa… och på ditt språk.'}
+   ]},
+ en:{start:'▶ Start',next:'Next →',back:'← Back',listen:'🔊 Listen',stop:'⏸ Stop',skip:'Skip ✕',
+   ctaTitle:'Ready to see it?',ctaPlay:'▶ Try the game',ctaTalk:'💬 Talk to tu aliada',
+   steps:[
+     {e:'👋',t:'What is this?',d:'A game for your events. Let me show you in 30 seconds.'},
+     {e:'📲',t:'Your guests scan a QR code',d:'Nothing to install — the game opens on their phone instantly.'},
+     {e:'🎯',t:'They play: how well do they know the guest of honour?',d:'Real questions and trick answers. Laughs guaranteed.'},
+     {e:'📸',t:'They take their keepsake photo',d:'A photo with the guest of honour, framed and ready to save.'},
+     {e:'🏆',t:'You see the live ranking',d:'Who is winning, photos and results, in your private panel.'},
+     {e:'✨',t:'All personalised for your event',d:'Wedding, graduation, birthday, hen/stag… and in your language.'}
+   ]}
+};
+var tStep=0, voiceOn=false;
+function TR(){return TOURS[TOURS[LANG]?LANG:'es'];}
+function startTour(){tStep=0;document.getElementById('tour').className='tourOverlay on';renderTour();}
+function closeTour(){voiceOn=false;try{speechSynthesis.cancel();}catch(e){}document.getElementById('tour').className='tourOverlay';}
+function tourSpeak(txt){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.lang=(LANG==='sv'?'sv-SE':(LANG==='en'?'en-GB':'es-ES'));speechSynthesis.speak(u);}catch(e){}}
+function toggleListen(){voiceOn=!voiceOn;if(!voiceOn){try{speechSynthesis.cancel();}catch(e){}}renderTour();}
+function tourNext(){tStep++;renderTour();}
+function tourBack(){if(tStep>0)tStep--;renderTour();}
+function tourTalk(){window.open('https://tualiada.es','_blank');}
+function renderTour(){
+  var tr=TR(),steps=tr.steps,n=steps.length;
+  document.getElementById('tSkip').textContent=tr.skip;
+  var dots='';for(var i=0;i<=n;i++)dots+='<i class="'+(i===tStep?'on':'')+'"></i>';
+  document.getElementById('tDots').innerHTML=dots;
+  var listen=document.getElementById('tListen');
+  if(tStep<n){
+    var sObj=steps[tStep];
+    document.getElementById('tEmoji').textContent=sObj.e;
+    document.getElementById('tTitle').textContent=sObj.t;
+    document.getElementById('tText').textContent=sObj.d;
+    listen.style.display='';listen.textContent=voiceOn?tr.stop:tr.listen;
+    var nav='<button class="btn green" type="button" onclick="tourNext()">'+(tStep===0?tr.start:tr.next)+'</button>';
+    if(tStep>0)nav+='<button class="btn ghost" type="button" onclick="tourBack()">'+tr.back+'</button>';
+    document.getElementById('tNav').innerHTML=nav;
+    if(voiceOn)tourSpeak(sObj.t+'. '+sObj.d);
+  }else{
+    document.getElementById('tEmoji').textContent='🎉';
+    document.getElementById('tTitle').textContent=tr.ctaTitle;
+    document.getElementById('tText').textContent='';
+    listen.style.display='none';
+    if(voiceOn){try{speechSynthesis.cancel();}catch(e){}}
+    document.getElementById('tNav').innerHTML='<button class="btn green" type="button" onclick="closeTour()">'+tr.ctaPlay+'</button>'+
+      '<button class="btn ghost" type="button" onclick="tourTalk()">'+tr.ctaTalk+'</button>';
+  }
+}
 
 /* ============ Juego ============ */
 function startGame(){
@@ -575,11 +683,17 @@ function savePhoto(){
 
 /* Idioma inicial + anti-repetición (estado guardado en el móvil) */
 (function(){
-  var s='es';try{s=localStorage.getItem('juegoLang')||'es';}catch(e){}applyLang(s);
-  if(DEMO){ /* demo siempre empieza fresco + insignia visible */
-    var b=document.createElement('div');b.textContent='DEMO';
-    b.style.cssText='position:fixed;top:8px;left:8px;z-index:50;background:var(--green);color:#0d1820;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;letter-spacing:1px;box-shadow:0 2px 8px rgba(0,0,0,.4)';
-    document.body.appendChild(b);return;
+  var s='es';try{s=localStorage.getItem('juegoLang')||'es';}catch(e){}
+  var qp=(location.search.match(/[?&]lang=(es|sv|en)\b/)||[])[1];if(qp)s=qp; /* ?lang=en fija el idioma del link */
+  applyLang(s);
+  if(DEMO){ /* demo/tour siempre empieza fresco */
+    if(!TOUR){ /* insignia DEMO (en el tour no, para no tapar) */
+      var b=document.createElement('div');b.textContent='DEMO';
+      b.style.cssText='position:fixed;top:8px;left:8px;z-index:50;background:var(--green);color:#0d1820;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;letter-spacing:1px;box-shadow:0 2px 8px rgba(0,0,0,.4)';
+      document.body.appendChild(b);
+    }
+    if(TOUR)startTour();
+    return;
   }
   var rec=null;try{rec=JSON.parse(localStorage.getItem('juanda_v1')||'null');}catch(e){}
   if(rec&&rec.sent){show('scrLocked');}

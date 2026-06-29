@@ -3,98 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz de Evento — un detalle que conecta</title>
+<title>Quiz de Evento — más risas en tu fiesta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--gold:#E9C46A;--gold2:#F4D58D;--pink:#FF6B9D;--ink:#0E1230;--ink2:#231654;--text:#EAE6F5;--muted:#A9A3C9;--green:#27D17C;}
+  :root{--bg:#FFF8F0;--card:#fff;--coral:#FF5470;--amar:#FFC43D;--turq:#21D4B4;--orange:#FF8A3D;
+    --ink:#1A1430;--soft:#6B6480;--line:rgba(26,20,48,.10);}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-  body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--ink);overflow-x:hidden;line-height:1.5;}
-  .bgwrap{position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#0E1230,#231654,#0E1230);background-size:200% 200%;animation:grad 16s ease infinite;}
-  @keyframes grad{0%{background-position:0% 0%}50%{background-position:100% 100%}100%{background-position:0% 0%}}
-  .spark{position:fixed;border-radius:50%;background:var(--gold);opacity:.0;z-index:0;animation:tw 4s ease-in-out infinite;}
-  @keyframes tw{0%,100%{opacity:0;transform:translateY(0)}50%{opacity:.5;transform:translateY(-8px)}}
-  .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:0 20px;}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.5;}
+  .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;pointer-events:none;}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 22px;}
+  h1,h2,h3,.fr{font-family:'Fraunces',serif;}
   .lang{display:flex;gap:6px;justify-content:flex-end;padding:14px 0 0;}
-  .lbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:var(--muted);font-family:inherit;font-weight:600;font-size:.78rem;border-radius:999px;padding:5px 11px;cursor:pointer;transition:.15s;}
-  .lbtn.on{border-color:var(--gold);color:var(--gold);}
+  .lbtn{background:#fff;border:1px solid var(--line);color:var(--soft);font-family:inherit;font-weight:700;font-size:.78rem;border-radius:999px;padding:6px 12px;cursor:pointer;}
+  .lbtn.on{border-color:var(--coral);color:var(--coral);}
 
-  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;padding:34px 0 30px;}
-  .proof{display:inline-flex;align-items:center;gap:8px;background:rgba(233,196,106,.12);border:1px solid rgba(233,196,106,.32);color:var(--gold2);font-size:.78rem;font-weight:600;padding:6px 13px;border-radius:999px;margin-bottom:18px;}
-  h1{font-family:'Playfair Display',serif;font-weight:800;font-size:2.7rem;line-height:1.08;color:#fff;margin-bottom:14px;}
-  .sub{color:var(--muted);font-size:1.06rem;max-width:30em;margin-bottom:24px;}
-  .cta{display:flex;gap:12px;flex-wrap:wrap;}
-  .btn{border:none;border-radius:14px;font-family:inherit;font-weight:700;font-size:1rem;padding:14px 22px;cursor:pointer;text-decoration:none;display:inline-block;transition:.18s;}
-  .btn.gold{background:linear-gradient(90deg,var(--gold),var(--gold2));color:var(--ink2);box-shadow:0 10px 26px rgba(233,196,106,.36);}
-  .btn.gold:hover{transform:translateY(-2px);}
-  .btn.ghost{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.2);color:#fff;}
-  .heroimg{width:100%;height:340px;object-fit:cover;border-radius:22px;border:1px solid rgba(255,255,255,.14);box-shadow:0 26px 60px rgba(0,0,0,.5);}
+  /* ===== HERO above-the-fold ===== */
+  .hero{min-height:calc(100dvh - 56px);display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding-bottom:10px;}
+  .badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);color:var(--ink);font-size:.8rem;font-weight:700;padding:7px 14px;border-radius:999px;margin-bottom:18px;box-shadow:0 6px 18px rgba(26,20,48,.06);}
+  .badge .st{color:var(--amar);}
+  h1{font-weight:900;font-size:3rem;line-height:1.02;letter-spacing:-.5px;margin-bottom:14px;}
+  h1 em{font-style:italic;color:var(--coral);}
+  .sub{color:var(--soft);font-size:1.08rem;max-width:26em;margin-bottom:22px;}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+  .btn{border:none;border-radius:14px;font-family:inherit;font-weight:800;font-size:1rem;padding:14px 24px;cursor:pointer;text-decoration:none;display:inline-block;transition:transform .18s;}
+  .btn.main{background:linear-gradient(100deg,#FF5470,#FF8A3D,#FFC43D);color:#fff;box-shadow:0 12px 28px rgba(255,84,112,.34);}
+  .btn.main:hover{transform:translateY(-2px);}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink);}
+  .mstats{display:flex;gap:24px;}
+  .mstat .n{font-family:'Fraunces';font-weight:900;font-size:1.5rem;color:var(--coral);line-height:1;}
+  .mstat .l{color:var(--soft);font-size:.78rem;}
 
-  .stage{text-align:center;padding:20px 0 10px;}
-  .stage h2{font-family:'Playfair Display',serif;font-size:1.7rem;color:#fff;margin-bottom:6px;}
-  .stage .h2sub{color:var(--muted);margin-bottom:26px;}
-  .demoarea{display:grid;grid-template-columns:300px 1fr;gap:34px;align-items:center;justify-items:center;max-width:760px;margin:0 auto;}
-  /* móvil */
-  .phone{width:286px;height:580px;border-radius:40px;background:#080a1a;padding:13px;position:relative;box-shadow:0 30px 70px rgba(0,0,0,.55);flex:0 0 auto;}
-  .notch{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:84px;height:7px;background:rgba(255,255,255,.18);border-radius:99px;z-index:6;}
-  .pscreen{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative;background:linear-gradient(160deg,#0E1230,#231654);}
-  .pbar{position:absolute;top:0;left:0;height:4px;background:var(--gold);width:0;z-index:5;}
-  .frame{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 22px;text-align:center;opacity:0;transform:scale(.96);transition:opacity .5s,transform .5s;pointer-events:none;}
+  /* columna derecha: foto rotando + móvil encima */
+  .stage{position:relative;display:flex;justify-content:center;align-items:center;min-height:600px;}
+  .photocard{position:absolute;width:230px;height:300px;right:6%;top:50%;transform:translateY(-46%) rotate(6deg);border-radius:20px;overflow:hidden;box-shadow:0 26px 60px rgba(26,20,48,.28);border:6px solid #fff;}
+  .photocard .pl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;}
+  .photocard .pl.show{opacity:1;}
+  .glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,84,112,.5),transparent 70%);filter:blur(20px);left:42%;top:50%;transform:translate(-50%,-50%);}
+
+  .phone{position:relative;width:282px;height:580px;border-radius:40px;background:#11121c;padding:12px;box-shadow:0 34px 70px rgba(26,20,48,.4);z-index:2;}
+  .notch{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:80px;height:7px;background:rgba(255,255,255,.22);border-radius:99px;z-index:6;}
+  .pscreen{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative;background:#fff;}
+  .pbar{position:absolute;top:0;left:0;height:4px;background:var(--coral);width:0;z-index:7;}
+  .ptab{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:.72rem;font-weight:800;color:var(--soft);z-index:6;}
+  .frame{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 22px;text-align:center;opacity:0;transform:scale(.96);transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1);pointer-events:none;}
   .frame.on{opacity:1;transform:scale(1);}
-  .fic{font-size:2.4rem;margin-bottom:10px;}
-  .ftitle{font-weight:800;color:#fff;font-size:1.15rem;margin-bottom:6px;}
-  .ftxt{color:#cfc8ec;font-size:.84rem;}
-  .qr{width:120px;height:120px;border-radius:16px;background:
-     repeating-linear-gradient(90deg,#fff 0 8px,transparent 8px 16px),
-     repeating-linear-gradient(0deg,#fff 0 8px,transparent 8px 16px);
-     background-color:#231654;margin-bottom:14px;border:6px solid #fff;}
-  .opt{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:11px;margin:6px 0;font-size:.82rem;text-align:left;color:#eee;}
-  .opt.good{border-color:var(--green);background:rgba(39,209,124,.18);color:#fff;}
-  .pola{width:150px;background:#fff;padding:8px 8px 26px;border-radius:6px;transform:rotate(-4deg);box-shadow:0 14px 30px rgba(0,0,0,.4);}
+  .fic{font-size:2.3rem;margin-bottom:8px;}
+  .ftitle{font-family:'Fraunces';font-weight:900;color:var(--ink);font-size:1.2rem;margin-bottom:6px;}
+  .fsub{color:var(--soft);font-size:.8rem;}
+  .qrbox{position:relative;width:128px;height:128px;margin:6px auto 14px;border-radius:16px;border:6px solid var(--ink);overflow:hidden;background:#fff;}
+  .qrbox::before{content:"";position:absolute;inset:8px;background:
+     repeating-linear-gradient(90deg,var(--ink) 0 9px,transparent 9px 18px),
+     repeating-linear-gradient(0deg,var(--ink) 0 9px,transparent 9px 18px);}
+  .scanline{position:absolute;left:0;right:0;height:14px;background:linear-gradient(var(--turq),transparent);opacity:.8;animation:scan 1.6s ease-in-out infinite;}
+  @keyframes scan{0%,100%{top:4px}50%{top:104px}}
+  .opt{width:100%;background:#f4f2f8;border:1.5px solid var(--line);border-radius:13px;padding:12px;margin:5px 0;font-size:.85rem;font-weight:700;text-align:left;color:var(--ink);opacity:0;transform:translateY(10px);}
+  .frame.on .opt{animation:rise .34s cubic-bezier(.34,1.56,.64,1) forwards;}
+  .frame.on .opt:nth-child(3){animation-delay:.08s;}
+  .frame.on .opt:nth-child(4){animation-delay:.16s;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+  .opt.good{border-color:var(--turq);background:rgba(33,212,180,.16);color:#0c7a64;}
+  .opt.dim{opacity:.45;}
+  .pola{width:152px;background:#fff;padding:9px 9px 28px;border-radius:7px;box-shadow:0 16px 34px rgba(26,20,48,.3);}
+  .frame.on .pola{animation:drop .6s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes drop{0%{transform:translateY(-46px) rotate(-8deg);opacity:0}100%{transform:translateY(0) rotate(-4deg);opacity:1}}
+  .pola{transform:rotate(-4deg);}
   .pola img{width:100%;height:140px;object-fit:cover;border-radius:3px;display:block;}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:8;pointer-events:none;}
+  .frame.on .flash{animation:fl .35s ease-out;}
+  @keyframes fl{0%{opacity:.85}100%{opacity:0}}
   .rk{width:100%;}
-  .rkrow{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:.82rem;color:#fff;}
-  .rkbar{height:14px;border-radius:7px;background:linear-gradient(90deg,var(--gold),var(--pink));}
+  .live{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:800;color:var(--coral);margin-bottom:10px;}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--coral);animation:blink 1s infinite;}
+  @keyframes blink{50%{opacity:.25}}
+  .rkrow{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.85rem;color:var(--ink);font-weight:700;}
+  .rkbar{height:15px;border-radius:8px;background:linear-gradient(90deg,var(--coral),var(--amar));width:0;}
+  .frame.on .rkbar{animation:grow .9s cubic-bezier(.16,1,.3,1) forwards;}
+  .frame.on .rkrow:nth-child(3) .rkbar{animation-delay:.12s;}
+  .frame.on .rkrow:nth-child(4) .rkbar{animation-delay:.24s;}
+  @keyframes grow{to{width:var(--w);}}
   .chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;}
-  .chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:.78rem;color:#fff;}
-  /* caption a la derecha del móvil */
-  .caption{max-width:300px;text-align:left;}
-  .cstep{color:var(--gold);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-  .ctitle{font-family:'Playfair Display',serif;font-size:1.5rem;color:#fff;margin-bottom:8px;}
-  .ctext{color:var(--muted);font-size:1rem;}
-  .dots{display:flex;gap:7px;margin-top:16px;}
-  .dots i{width:8px;height:8px;border-radius:99px;background:rgba(255,255,255,.2);display:block;transition:.2s;cursor:pointer;}
-  .dots i.on{background:var(--gold);width:22px;}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:.78rem;font-weight:700;color:var(--ink);}
+  .chip.on{background:var(--coral);color:#fff;border-color:var(--coral);}
+  .caps{position:absolute;left:50%;bottom:-44px;transform:translateX(-50%);white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:.85rem;font-weight:700;box-shadow:0 8px 20px rgba(26,20,48,.1);}
+  .caps b{color:var(--coral);}
+  .dots{display:flex;gap:7px;justify-content:center;position:absolute;left:0;right:0;bottom:-74px;}
+  .dots i{width:8px;height:8px;border-radius:99px;background:rgba(26,20,48,.18);display:block;transition:.2s;cursor:pointer;}
+  .dots i.on{background:var(--coral);width:22px;}
 
-  .stats{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;padding:38px 0 6px;}
-  .stat{text-align:center;}
-  .stat .n{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--gold);font-weight:800;}
-  .stat .l{color:var(--muted);font-size:.85rem;}
+  /* ===== resto (bajo el fold) ===== */
+  .more{text-align:center;padding:70px 0 20px;}
+  .more h2{font-size:1.9rem;margin-bottom:8px;}
+  .more .s{color:var(--soft);margin-bottom:22px;}
+  .evchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:540px;margin:0 auto 26px;}
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0;}
+  .gallery img{width:100%;height:150px;object-fit:cover;border-radius:14px;}
+  .final{text-align:center;padding:30px 0 64px;}
+  .final h2{font-size:2rem;margin-bottom:8px;max-width:16em;margin-left:auto;margin-right:auto;}
+  .final p{color:var(--soft);margin-bottom:22px;}
+  .credit{display:block;color:var(--soft);font-size:.82rem;margin-top:24px;text-decoration:none;}
+  .credit b{color:var(--coral);}
 
-  .events{text-align:center;padding:30px 0 8px;}
-  .events h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:#fff;margin-bottom:14px;}
-
-  .final{text-align:center;padding:44px 0 60px;}
-  .final h2{font-family:'Playfair Display',serif;font-size:1.9rem;color:#fff;margin-bottom:8px;max-width:18em;margin-left:auto;margin-right:auto;}
-  .final p{color:var(--muted);margin-bottom:22px;}
-  .credit{display:block;color:var(--muted);font-size:.8rem;margin-top:26px;text-decoration:none;}
-  .credit b{color:var(--gold);}
-
-  @media(max-width:760px){
-    .hero{grid-template-columns:1fr;gap:22px;}
-    h1{font-size:2.1rem;}
-    .heroimg{height:230px;}
-    .demoarea{grid-template-columns:1fr;gap:20px;}
-    .caption{text-align:center;max-width:none;}
-    .dots{justify-content:center;}
+  @media(max-width:780px){
+    .hero{grid-template-columns:1fr;gap:14px;min-height:auto;padding-top:6px;}
+    h1{font-size:2rem;}
+    .sub{display:none;}
+    .stage{min-height:auto;order:2;margin:6px 0 60px;}
+    .photocard{display:none;}
+    .phone{width:236px;height:486px;}
+    .glow{width:260px;height:260px;}
+    .mstats{order:4;}
+    .cta{order:3;width:100%;}
+    .btn.main{flex:1;text-align:center;}
+    .gallery{grid-template-columns:repeat(2,1fr);}
+    .frame{padding:30px 18px;}
   }
 </style>
 </head>
 <body>
-<div class="bgwrap"></div>
-<div class="wrap">
+<span class="blob" style="width:300px;height:300px;background:#FF5470;left:-60px;top:-40px;"></span>
+<span class="blob" style="width:280px;height:280px;background:#FFC43D;right:-50px;top:120px;opacity:.4;"></span>
+<span class="blob" style="width:260px;height:260px;background:#21D4B4;left:30%;bottom:-80px;opacity:.35;"></span>
 
+<div class="wrap">
   <div class="lang">
     <button class="lbtn on" id="l-es" onclick="setLang('es')">🇪🇸 ES</button>
     <button class="lbtn" id="l-sv" onclick="setLang('sv')">🇸🇪 SV</button>
@@ -102,165 +134,190 @@
   </div>
 
   <section class="hero">
-    <div>
-      <span class="proof" id="proof"></span>
+    <div class="copy">
+      <span class="badge"><span class="st">★ 5.0</span> · <span id="bproof"></span></span>
       <h1 id="h1"></h1>
       <p class="sub" id="sub"></p>
       <div class="cta">
-        <a class="btn gold" id="cta1" href="#demo"></a>
+        <a class="btn main" id="cta1" href="#mas"></a>
         <a class="btn ghost" id="cta2" href="https://tualiada.es" target="_blank" rel="noopener"></a>
       </div>
+      <div class="mstats">
+        <div class="mstat"><div class="n">+500</div><div class="l" id="ms1"></div></div>
+        <div class="mstat"><div class="n">10 min</div><div class="l" id="ms2"></div></div>
+        <div class="mstat"><div class="n">0</div><div class="l" id="ms3"></div></div>
+      </div>
     </div>
-    <img class="heroimg" alt="" src="https://images.pexels.com/photos/6952747/pexels-photo-6952747.jpeg?auto=compress&cs=tinysrgb&w=900">
-  </section>
 
-  <section class="stage" id="demo">
-    <h2 id="stTitle"></h2>
-    <div class="h2sub" id="stSub"></div>
-    <div class="demoarea">
+    <div class="stage">
+      <div class="glow"></div>
+      <div class="photocard">
+        <img class="pl a" alt=""><img class="pl b" alt="">
+      </div>
       <div class="phone">
         <div class="notch"></div>
         <div class="pscreen">
           <div class="pbar" id="pbar"></div>
-          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qr"></div><div class="ftitle" id="f0t"></div></div>
-          <div class="frame" data-i="1"><div class="fic">🎯</div><div class="ftitle" id="f1t" style="margin-bottom:12px"></div><div class="opt">A</div><div class="opt good">B ✓</div><div class="opt">C</div></div>
-          <div class="frame" data-i="2"><div class="pola"><img alt="" src="https://images.pexels.com/photos/30682913/pexels-photo-30682913.jpeg?auto=compress&cs=tinysrgb&w=500"></div><div class="ftitle" id="f2t" style="margin-top:14px"></div></div>
-          <div class="frame" data-i="3"><div class="ftitle" id="f3t" style="margin-bottom:12px"></div><div class="rk">
-            <div class="rkrow">🥇 <div class="rkbar" style="width:78%"></div></div>
-            <div class="rkrow">🥈 <div class="rkbar" style="width:60%"></div></div>
-            <div class="rkrow">🥉 <div class="rkbar" style="width:44%"></div></div>
+          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div></div>
+          <div class="frame" data-i="1"><div class="ftitle" id="f1t" style="margin-bottom:12px"></div><div class="opt dim">A</div><div class="opt good">B ✓</div><div class="opt dim">C</div></div>
+          <div class="frame" data-i="2"><div class="flash"></div><div class="pola"><img id="polaimg" alt=""></div><div class="ftitle" id="f2t" style="margin-top:16px"></div></div>
+          <div class="frame" data-i="3"><div class="live"><i></i><span id="f3live"></span></div><div class="ftitle" id="f3t" style="margin-bottom:10px"></div><div class="rk">
+            <div class="rkrow">🥇<div class="rkbar" style="--w:82%"></div><span id="pt1">0</span></div>
+            <div class="rkrow">🥈<div class="rkbar" style="--w:61%"></div></div>
+            <div class="rkrow">🥉<div class="rkbar" style="--w:44%"></div></div>
           </div></div>
           <div class="frame" data-i="4"><div class="fic">✨</div><div class="ftitle" id="f4t" style="margin-bottom:12px"></div><div class="chips" id="f4chips"></div></div>
+          <div class="caps" id="caps"></div>
+          <div class="dots" id="dots"></div>
         </div>
-      </div>
-      <div class="caption">
-        <div class="cstep" id="capStep"></div>
-        <div class="ctitle" id="capTitle"></div>
-        <div class="ctext" id="capText"></div>
-        <div class="dots" id="dots"></div>
       </div>
     </div>
   </section>
 
-  <section class="stats" id="stats">
-    <div class="stat"><div class="n" id="n1">0</div><div class="l" id="l1"></div></div>
-    <div class="stat"><div class="n" id="n2">0</div><div class="l" id="l2"></div></div>
-    <div class="stat"><div class="n" id="n3">0</div><div class="l" id="l3"></div></div>
-  </section>
-
-  <section class="events">
-    <h3 id="evTitle"></h3>
-    <div class="chips" id="evChips" style="max-width:520px;margin:0 auto;"></div>
+  <section class="more" id="mas">
+    <h2 id="evTitle"></h2>
+    <div class="s" id="evSub"></div>
+    <div class="evchips" id="evChips"></div>
+    <div class="gallery" id="gallery"></div>
   </section>
 
   <section class="final">
     <h2 id="finTitle"></h2>
     <p id="finSub"></p>
-    <a class="btn gold" id="finBtn" href="https://tualiada.es" target="_blank" rel="noopener"></a>
+    <a class="btn main" id="finBtn" href="https://tualiada.es" target="_blank" rel="noopener"></a>
     <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener">— <b>tu aliada</b></a>
   </section>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 <script>
+const FOTOS=[
+ {tipo:'Cumpleaños',tipoEn:'Birthday',tipoSv:'Födelsedag',src:'https://images.pexels.com/photos/6762314/pexels-photo-6762314.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Boda',tipoEn:'Wedding',tipoSv:'Bröllop',src:'https://images.pexels.com/photos/31688036/pexels-photo-31688036.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Baby shower',tipoEn:'Baby shower',tipoSv:'Babyshower',src:'https://images.pexels.com/photos/7802442/pexels-photo-7802442.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Despedida',tipoEn:'Hen party',tipoSv:'Möhippa',src:'https://images.pexels.com/photos/19095111/pexels-photo-19095111.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Fiesta',tipoEn:'Party',tipoSv:'Fest',src:'https://images.pexels.com/photos/5935207/pexels-photo-5935207.jpeg?auto=compress&cs=tinysrgb&w=700'}
+];
+const GAL=['6762314','9041817','5935207','19095111','35370605','31688036','5804898','7802442']
+  .map(id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=500`);
+
 const I={
- es:{lang:'es',proof:'★ 5.0 · +500 eventos · sin app · listo en minutos',
-  h1:'Un detalle que conecta a tus invitados',
-  sub:'Escanean un código y juegan sobre el homenajeado. Risas, conversación y un recuerdo que se llevan a casa.',
+ es:{lang:'es',proof:'+500 eventos · sin app',
+  h1:'Más risas y conexión en tu próxima <em>fiesta</em>',
+  sub:'Tus invitados escanean un código y juegan sobre el homenajeado. Un recuerdo que se llevan a casa.',
   cta1:'Ver cómo funciona', cta2:'Hablamos',
-  stTitle:'En 5 pasos, sin complicaciones', stSub:'Así lo viven tus invitados',
+  ms:['eventos animados','para tenerlo listo','apps que descargar'],
   steps:[
-   {s:'Paso 1 · Escanea',t:'Escanea el código',x:'Apuntas con la cámara del móvil. Sin apps, sin instalar nada. Estás dentro.'},
-   {s:'Paso 2 · Juega',t:'Adivina y ríe',x:'Preguntas reales sobre el homenajeado… y alguna respuesta trampa con su gracia. Ahí empiezan las risas.'},
-   {s:'Paso 3 · Recuerdo',t:'Un recuerdo para casa',x:'Una foto del momento, para llevársela a casa cuando acabe la noche.'},
-   {s:'Paso 4 · En vivo',t:'El anfitrión lo ve en vivo',x:'En pantalla, el ranking y las fotos van apareciendo. La fiesta se mira a sí misma, en directo.'},
-   {s:'Paso 5 · A medida',t:'Para cualquier evento',x:'Boda, cumpleaños, graduación o despedida. Tu evento, tus preguntas, tu idioma.'}
+   {s:'Escanea',t:'Escanea el código',x:'Apuntas con la cámara. Sin apps, sin instalar nada.'},
+   {s:'Juega',t:'Adivina y ríe',x:'Preguntas reales y alguna trampa con su gracia. Ahí empiezan las risas.'},
+   {s:'Recuerdo',t:'Un recuerdo para casa',x:'Una foto del momento, para llevársela.'},
+   {s:'En vivo',t:'El anfitrión lo ve en vivo',x:'El ranking y las fotos van apareciendo. La fiesta se mira a sí misma.'},
+   {s:'A medida',t:'Para cualquier evento',x:'Boda, cumpleaños, graduación o despedida. Tu evento, tu idioma.'}
   ],
-  f0t:'Escanea y entra', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3t:'Ranking en vivo', f4t:'Tu evento, a tu medida',
-  chips:['Boda','Cumpleaños','Graduación','Despedida','Comunión'],
-  stats:[['+500','eventos animados'],['10 min','para tenerlo listo'],['0','apps que descargar']],
-  evTitle:'Encaja en cualquier celebración',
+  f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida',
+  evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
   finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'Hablamos'},
- en:{lang:'en',proof:'★ 5.0 · 500+ events · no app · ready in minutes',
-  h1:'A little touch that brings your guests together',
-  sub:'They scan a code and play a quiz about the guest of honor. Laughs, conversation and a keepsake to take home.',
+ en:{lang:'en',proof:'500+ events · no app',
+  h1:'More laughs and connection at your next <em>party</em>',
+  sub:'Your guests scan a code and play a quiz about the guest of honor. A keepsake they take home.',
   cta1:'See how it works', cta2:"Let's talk",
-  stTitle:'Five simple steps', stSub:'Here is what your guests experience',
+  ms:['events hosted','to get it ready','apps to download'],
   steps:[
-   {s:'Step 1 · Scan',t:'Scan the code',x:"Point your phone's camera. No apps, nothing to install. You're in."},
-   {s:'Step 2 · Play',t:'Guess and laugh',x:"Real questions about the guest of honor… and a few cheeky trick answers. That's where the laughs begin."},
-   {s:'Step 3 · Keepsake',t:'A keepsake to take home',x:'A snapshot of the moment, to take home when the night winds down.'},
-   {s:'Step 4 · Live',t:'The host sees it live',x:'On screen, the ranking and photos roll in. The party watching itself, in real time.'},
-   {s:'Step 5 · Tailored',t:'For any event',x:'Wedding, birthday, graduation or send-off. Your event, your questions, your language.'}
+   {s:'Scan',t:'Scan the code',x:"Point your camera. No apps, nothing to install."},
+   {s:'Play',t:'Guess and laugh',x:"Real questions and a few cheeky trick answers. That's where the laughs begin."},
+   {s:'Keepsake',t:'A keepsake to take home',x:'A snapshot of the moment, to keep.'},
+   {s:'Live',t:'The host sees it live',x:'The ranking and photos roll in. The party watching itself.'},
+   {s:'Tailored',t:'For any event',x:'Wedding, birthday, graduation or send-off. Your event, your language.'}
   ],
-  f0t:'Scan and join', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3t:'Live ranking', f4t:'Your event, your way',
-  chips:['Wedding','Birthday','Graduation','Send-off','Christening'],
-  stats:[['500+','events hosted'],['10 min','to get it ready'],['0','apps to download']],
-  evTitle:'Fits any celebration',
+  f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way',
+  evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
   finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:"Let's talk"},
- sv:{lang:'sv',proof:'★ 5.0 · 500+ event · ingen app · klart på minuter',
-  h1:'En liten detalj som för dina gäster samman',
-  sub:'De skannar en kod och spelar ett quiz om hyllningsgästen. Skratt, samtal och ett minne att ta med hem.',
+ sv:{lang:'sv',proof:'500+ event · ingen app',
+  h1:'Mer skratt och gemenskap på din nästa <em>fest</em>',
+  sub:'Dina gäster skannar en kod och spelar ett quiz om hyllningsgästen. Ett minne att ta med hem.',
   cta1:'Se hur det funkar', cta2:'Hör av dig',
-  stTitle:'Fem enkla steg', stSub:'Så här upplever dina gäster det',
+  ms:['event','att få klart','appar att ladda ner'],
   steps:[
-   {s:'Steg 1 · Skanna',t:'Skanna koden',x:'Rikta mobilkameran. Inga appar, inget att installera. Du är med.'},
-   {s:'Steg 2 · Spela',t:'Gissa och skratta',x:'Riktiga frågor om hyllningsgästen… och några lurigt roliga svar. Där börjar skratten.'},
-   {s:'Steg 3 · Minne',t:'Ett minne att ta hem',x:'En bild på stunden, att ta med hem när kvällen lider mot sitt slut.'},
-   {s:'Steg 4 · Live',t:'Värden ser det live',x:'På skärmen dyker ranking och bilder upp efter hand. Festen ser sig själv, i realtid.'},
-   {s:'Steg 5 · Anpassat',t:'För alla event',x:'Bröllop, födelsedag, examen eller avtackning. Ditt event, dina frågor, ditt språk.'}
+   {s:'Skanna',t:'Skanna koden',x:'Rikta kameran. Inga appar, inget att installera.'},
+   {s:'Spela',t:'Gissa och skratta',x:'Riktiga frågor och några lurigt roliga svar. Där börjar skratten.'},
+   {s:'Minne',t:'Ett minne att ta hem',x:'En bild på stunden, att spara.'},
+   {s:'Live',t:'Värden ser det live',x:'Ranking och bilder dyker upp. Festen ser sig själv.'},
+   {s:'Anpassat',t:'För alla event',x:'Bröllop, födelsedag, examen eller avtackning. Ditt event, ditt språk.'}
   ],
-  f0t:'Skanna och gå med', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt',
-  chips:['Bröllop','Födelsedag','Examen','Avtackning','Dop'],
-  stats:[['500+','event'],['10 min','att få klart'],['0','appar att ladda ner']],
-  evTitle:'Passar varje fest',
+  f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt',
+  evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
   finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'Hör av dig'}
 };
-let LANG='es', step=0, timer=null;
+
+const POP=['#FF5470','#FFC43D','#21D4B4','#FF8A3D'];
 const $=id=>document.getElementById(id);
+let LANG='es', step=0, timer=null, fi=0, fotoLayer=true, photoTimer=null;
 function L(){return I[LANG];}
+function tipoOf(f){return LANG==='en'?f.tipoEn:(LANG==='sv'?f.tipoSv:f.tipo);}
+
 function fill(){
   const t=L();
-  $('proof').textContent=t.proof; $('h1').textContent=t.h1; $('sub').textContent=t.sub;
+  $('bproof').textContent=t.proof; $('h1').innerHTML=t.h1; $('sub').textContent=t.sub;
   $('cta1').textContent=t.cta1; $('cta2').textContent=t.cta2;
-  $('stTitle').textContent=t.stTitle; $('stSub').textContent=t.stSub;
-  $('f0t').textContent=t.f0t; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
-  $('f4chips').innerHTML=t.chips.map(c=>`<span class="chip">${c}</span>`).join('');
-  $('evTitle').textContent=t.evTitle;
-  $('evChips').innerHTML=t.chips.map(c=>`<span class="chip">${c}</span>`).join('');
-  $('l1').textContent=t.stats[0][1]; $('l2').textContent=t.stats[1][1]; $('l3').textContent=t.stats[2][1];
+  $('ms1').textContent=t.ms[0]; $('ms2').textContent=t.ms[1]; $('ms3').textContent=t.ms[2];
+  $('f0t').textContent=t.f0t; $('f0s').textContent=t.f0s; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t;
+  $('f3live').textContent=t.f3live; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
+  $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
   $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn;
+  $('evChips').innerHTML=FOTOS.map(f=>`<span class="chip">${tipoOf(f)}</span>`).join('');
   $('dots').innerHTML=t.steps.map((s,i)=>`<i class="${i===step?'on':''}" onclick="go(${i})"></i>`).join('');
   ['es','sv','en'].forEach(c=>{const b=$('l-'+c);if(b)b.className='lbtn'+(c===LANG?' on':'');});
-  renderCap();
+  renderChips(); renderCap();
+}
+function renderChips(){
+  $('f4chips').innerHTML=FOTOS.map((f,i)=>`<span class="chip${i===fi?' on':''}">${tipoOf(f)}</span>`).join('');
 }
 function renderCap(){
   const s=L().steps[step];
-  $('capStep').textContent=s.s; $('capTitle').textContent=s.t; $('capText').textContent=s.x;
+  $('caps').innerHTML=`<b>${s.s}</b> · ${s.t}`;
   document.querySelectorAll('.frame').forEach(f=>f.classList.toggle('on',+f.dataset.i===step));
   document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===step));
   const bar=$('pbar'); bar.style.transition='none'; bar.style.width='0';
-  void bar.offsetWidth; bar.style.transition='width 3.6s linear'; bar.style.width='100%';
-  if(step===3 && window.confetti){confetti({particleCount:90,spread:65,origin:{y:.5},disableForReducedMotion:true,colors:['#E9C46A','#FF6B9D','#fff']});}
+  void bar.offsetWidth; bar.style.transition='width 3.4s linear'; bar.style.width='100%';
+  if(step===1) setTimeout(confettiAcierto,500);
+  if(step===3){ setTimeout(confettiGanador,420); countUp($('pt1'),1240); }
 }
 function go(i){step=i;renderCap();restart();}
 function nextStep(){step=(step+1)%5;renderCap();}
-function restart(){clearInterval(timer);timer=setInterval(nextStep,3800);}
+function restart(){clearInterval(timer);timer=setInterval(nextStep,3400);}
 function setLang(l){if(!I[l])return;LANG=l;document.documentElement.lang=l;fill();}
-function countUp(el,to,suf){let c=0;const step=Math.max(1,Math.round(to/40));const f=()=>{c+=step;if(c>=to){c=to;}el.textContent=c+(suf||'');if(c<to)requestAnimationFrame(f);};f();}
+function countUp(el,to){let c=0;const s=Math.max(1,Math.round(to/45));const f=()=>{c+=s;if(c>=to)c=to;el.textContent=c.toLocaleString('es-ES');if(c<to)requestAnimationFrame(f);};f();}
+
+function confettiAcierto(){if(!window.confetti)return;confetti({particleCount:24,spread:55,startVelocity:26,scalar:.8,origin:{y:.55},colors:['#21D4B4','#FFC43D'],disableForReducedMotion:true});}
+function confettiGanador(){if(!window.confetti)return;const end=Date.now()+700;(function f(){confetti({particleCount:5,angle:60,spread:60,origin:{x:0,y:.7},colors:POP,disableForReducedMotion:true});confetti({particleCount:5,angle:120,spread:60,origin:{x:1,y:.7},colors:POP,disableForReducedMotion:true});if(Date.now()<end)requestAnimationFrame(f);})();confetti({particleCount:110,spread:90,startVelocity:42,scalar:1.05,origin:{y:.6},colors:POP,disableForReducedMotion:true});}
+function confettiBienvenida(){if(!window.confetti)return;const end=Date.now()+1400;(function f(){confetti({particleCount:2,startVelocity:0,ticks:200,gravity:.4,origin:{x:Math.random(),y:-0.1},colors:POP,scalar:.7,disableForReducedMotion:true});if(Date.now()<end)requestAnimationFrame(f);})();}
+
+function rotarFoto(){
+  fi=(fi+1)%FOTOS.length;
+  const src=FOTOS[fi].src, img=new Image();
+  img.onload=()=>{
+    const a=document.querySelector('.photocard .a'), b=document.querySelector('.photocard .b');
+    const showEl=fotoLayer?b:a, hideEl=fotoLayer?a:b;
+    showEl.src=src; showEl.classList.add('show'); hideEl.classList.remove('show'); fotoLayer=!fotoLayer;
+    const pola=$('polaimg'); pola.style.opacity=0; setTimeout(()=>{pola.src=src;pola.style.opacity=1;},250);
+    renderChips();
+  };
+  img.src=src;
+}
+
 function initLang(){const q=(location.search.match(/[?&]lang=(es|sv|en)/)||[])[1];setLang(q||'es');}
 
+document.querySelector('.photocard .a').src=FOTOS[0].src;
+document.querySelector('.photocard .a').classList.add('show');
+$('polaimg').src=FOTOS[0].src; $('polaimg').style.transition='opacity .3s';
+$('gallery').innerHTML=GAL.map(s=>`<img loading="lazy" alt="" src="${s}">`).join('');
 initLang();
 restart();
-let counted=false;
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;
-  $('n1').textContent='+500'; $('n2').textContent='10 min'; $('n3').textContent='0';
-}}),{threshold:.4});
-io.observe($('stats'));
+photoTimer=setInterval(rotarFoto,4200);
+setTimeout(confettiBienvenida,400);
 </script>
 </body>
 </html>

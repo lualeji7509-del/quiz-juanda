@@ -53,9 +53,7 @@
   .ftitle{font-family:'Fraunces';font-weight:900;color:var(--ink);font-size:1.2rem;margin-bottom:6px;}
   .fsub{color:var(--soft);font-size:.8rem;}
   .qrbox{position:relative;width:128px;height:128px;margin:6px auto 14px;border-radius:16px;border:6px solid var(--ink);overflow:hidden;background:#fff;}
-  .qrbox::before{content:"";position:absolute;inset:8px;background:
-     repeating-linear-gradient(90deg,var(--ink) 0 9px,transparent 9px 18px),
-     repeating-linear-gradient(0deg,var(--ink) 0 9px,transparent 9px 18px);}
+  .qrbox img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);display:block;}
   .scanline{position:absolute;left:0;right:0;height:14px;background:linear-gradient(var(--turq),transparent);opacity:.8;animation:scan 1.6s ease-in-out infinite;}
   @keyframes scan{0%,100%{top:4px}50%{top:104px}}
   .opt{width:100%;background:#f4f2f8;border:1.5px solid var(--line);border-radius:13px;padding:12px;margin:5px 0;font-size:.85rem;font-weight:700;text-align:left;color:var(--ink);opacity:0;transform:translateY(10px);}
@@ -97,8 +95,13 @@
   .more h2{font-size:1.9rem;margin-bottom:8px;}
   .more .s{color:var(--soft);margin-bottom:22px;}
   .evchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:540px;margin:0 auto 26px;}
-  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0;}
-  .gallery img{width:100%;height:150px;object-fit:cover;border-radius:14px;}
+  .marquee{overflow:hidden;width:100vw;position:relative;left:50%;margin-left:-50vw;margin-top:12px;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+  .track{display:flex;gap:14px;width:max-content;padding:6px 0;}
+  .track img{width:228px;height:150px;object-fit:cover;border-radius:16px;flex:0 0 auto;box-shadow:0 12px 26px rgba(20,36,51,.16);}
+  .t1{animation:mq 36s linear infinite;}
+  .t2{animation:mq 44s linear infinite reverse;}
+  .marquee:hover .track{animation-play-state:paused;}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
   .final{text-align:center;padding:30px 0 64px;}
   .final h2{font-size:2rem;margin-bottom:8px;max-width:16em;margin-left:auto;margin-right:auto;}
   .final p{color:var(--soft);margin-bottom:22px;}
@@ -158,7 +161,7 @@
         <div class="notch"></div>
         <div class="pscreen">
           <div class="pbar" id="pbar"></div>
-          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div></div>
+          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><img src="qr-demo.png" alt="QR"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div></div>
           <div class="frame" data-i="1"><div class="ftitle" id="f1t" style="margin-bottom:12px"></div><div class="opt dim">A</div><div class="opt good">B ✓</div><div class="opt dim">C</div></div>
           <div class="frame" data-i="2"><div class="flash"></div><div class="pola"><img id="polaimg" alt=""></div><div class="ftitle" id="f2t" style="margin-top:16px"></div></div>
           <div class="frame" data-i="3"><div class="live"><i></i><span id="f3live"></span></div><div class="ftitle" id="f3t" style="margin-bottom:10px"></div><div class="rk">
@@ -178,8 +181,9 @@
     <h2 id="evTitle"></h2>
     <div class="s" id="evSub"></div>
     <div class="evchips" id="evChips"></div>
-    <div class="gallery" id="gallery"></div>
   </section>
+  <div class="marquee"><div class="track t1" id="track1"></div></div>
+  <div class="marquee"><div class="track t2" id="track2"></div></div>
 
   <section class="final">
     <h2 id="finTitle"></h2>
@@ -316,7 +320,10 @@ function initLang(){const q=(location.search.match(/[?&]lang=(es|sv|en)/)||[])[1
 document.querySelector('.photocard .a').src=FOTOS[0].src;
 document.querySelector('.photocard .a').classList.add('show');
 $('polaimg').src=FOTOS[0].src; $('polaimg').style.transition='opacity .3s';
-$('gallery').innerHTML=GAL.map(s=>`<img loading="lazy" alt="" src="${s}">`).join('');
+function shuffleArr(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const row1=shuffleArr(GAL), row2=shuffleArr(GAL);
+const imgs=arr=>arr.concat(arr).map(s=>`<img loading="lazy" alt="" src="${s}">`).join('');
+$('track1').innerHTML=imgs(row1); $('track2').innerHTML=imgs(row2);
 initLang();
 restart();
 photoTimer=setInterval(rotarFoto,4200);

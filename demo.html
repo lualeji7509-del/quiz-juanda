@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#FFF8F0;--card:#fff;--coral:#FF5470;--amar:#FFC43D;--turq:#21D4B4;--orange:#FF8A3D;
-    --ink:#1A1430;--soft:#6B6480;--line:rgba(26,20,48,.10);}
+  :root{--bg:#FFF8F0;--card:#fff;--coral:#FF2E63;--amar:#FFC43D;--turq:#27D17C;--orange:#FF8A3D;
+    --green:#27D17C;--navy:#142433;--brick:#9a5a44;--ink:#142433;--soft:#5d6f7d;--line:rgba(20,36,51,.12);}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.5;}
   .blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;pointer-events:none;}
@@ -122,9 +122,9 @@
 </style>
 </head>
 <body>
-<span class="blob" style="width:300px;height:300px;background:#FF5470;left:-60px;top:-40px;"></span>
-<span class="blob" style="width:280px;height:280px;background:#FFC43D;right:-50px;top:120px;opacity:.4;"></span>
-<span class="blob" style="width:260px;height:260px;background:#21D4B4;left:30%;bottom:-80px;opacity:.35;"></span>
+<span class="blob" style="width:320px;height:320px;background:#27D17C;left:-70px;top:-50px;opacity:.2;"></span>
+<span class="blob" style="width:280px;height:280px;background:#142433;right:-60px;top:130px;opacity:.1;"></span>
+<span class="blob" style="width:260px;height:260px;background:#9a5a44;left:32%;bottom:-90px;opacity:.13;"></span>
 
 <div class="wrap">
   <div class="lang">
@@ -140,7 +140,7 @@
       <p class="sub" id="sub"></p>
       <div class="cta">
         <a class="btn main" id="cta1" href="#mas"></a>
-        <a class="btn ghost" id="cta2" href="https://tualiada.es" target="_blank" rel="noopener"></a>
+        <a class="btn ghost" id="cta2" href="https://wa.me/46707968175?text=Hola%2C%20me%20interesa%20el%20Quiz%20de%20Evento" target="_blank" rel="noopener"></a>
       </div>
       <div class="mstats">
         <div class="mstat"><div class="n">+500</div><div class="l" id="ms1"></div></div>
@@ -184,8 +184,11 @@
   <section class="final">
     <h2 id="finTitle"></h2>
     <p id="finSub"></p>
-    <a class="btn main" id="finBtn" href="https://tualiada.es" target="_blank" rel="noopener"></a>
-    <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener">— <b>tu aliada</b></a>
+    <div class="cta" style="justify-content:center">
+      <a class="btn main" id="finBtn" href="https://wa.me/46707968175?text=Hola%20tu%20aliada%2C%20me%20interesa%20el%20Quiz%20de%20Evento"></a>
+      <a class="btn ghost" id="finMail" href="mailto:tualiadacanal@gmail.com?subject=Quiz%20de%20Evento"></a>
+    </div>
+    <a class="credit" href="https://tualiada.es" target="_blank" rel="noopener"><img src="tualiada-logo.png" alt="" style="height:24px;vertical-align:middle;margin-right:7px;border-radius:6px"> tu al<span style="color:var(--green);font-weight:800">IA</span>da</a>
   </section>
 </div>
 
@@ -217,7 +220,7 @@ const I={
   f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida',
   evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
-  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'Hablamos'},
+  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
  en:{lang:'en',proof:'500+ events · no app',
   h1:'More laughs and connection at your next <em>party</em>',
   sub:'Your guests scan a code and play a quiz about the guest of honor. A keepsake they take home.',
@@ -233,7 +236,7 @@ const I={
   f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way',
   evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
-  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:"Let's talk"},
+  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
  sv:{lang:'sv',proof:'500+ event · ingen app',
   h1:'Mer skratt och gemenskap på din nästa <em>fest</em>',
   sub:'Dina gäster skannar en kod och spelar ett quiz om hyllningsgästen. Ett minne att ta med hem.',
@@ -249,7 +252,7 @@ const I={
   f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt',
   evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
-  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'Hör av dig'}
+  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'}
 };
 
 const POP=['#FF5470','#FFC43D','#21D4B4','#FF8A3D'];
@@ -266,7 +269,7 @@ function fill(){
   $('f0t').textContent=t.f0t; $('f0s').textContent=t.f0s; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t;
   $('f3live').textContent=t.f3live; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
   $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
-  $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn;
+  $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn; $('finMail').textContent=t.finMail;
   $('evChips').innerHTML=FOTOS.map(f=>`<span class="chip">${tipoOf(f)}</span>`).join('');
   $('dots').innerHTML=t.steps.map((s,i)=>`<i class="${i===step?'on':''}" onclick="go(${i})"></i>`).join('');
   ['es','sv','en'].forEach(c=>{const b=$('l-'+c);if(b)b.className='lbtn'+(c===LANG?' on':'');});

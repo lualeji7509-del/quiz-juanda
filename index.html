@@ -271,6 +271,7 @@ function T(){return UI[LANG];}
 /* ============ Estado ============ */
 var idx=0, score=0, answered=false, order=[], results=[];
 var finishedAt='', photoFile=null, sending=false, sent=false, keepBlob=null, savedName='';
+var DEMO=/[?&]demo\b/.test(location.search); /* modo demostración: siempre fresco, no guarda ni envía nada real */
 
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function setText(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
@@ -432,6 +433,11 @@ function sendToDad(){
   if(sending||sent)return;
   var nm=document.getElementById('pName').value.trim();
   if(!nm||!photoFile){setStatus(T().needBoth);return;}
+  if(DEMO){ /* demo: no escribe en Supabase ni avisa por WhatsApp; muestra el recuerdo */
+    sent=true;document.getElementById('eShare').disabled=true;savedName=nm;
+    setStatus(LANG==='sv'?'✨ Demo klar! Så här ser det ut för dina gäster.':'✨ ¡Demo lista! Así lo verían tus invitados.');
+    makeKeepsake();return;
+  }
   if(CFG.SUPABASE_URL.indexOf('XXXX')>-1){setStatus('⚙️ Falta conectar Supabase (lo hace Claude).');return;}
   sending=true;document.getElementById('eShare').disabled=true;setStatus(T().sending);
   var ts=finishedAt,safe=(nm.replace(/[^a-z0-9]/gi,'_').toLowerCase().slice(0,24)||'jugador');
@@ -525,6 +531,7 @@ function saveKeepsake(){
 }
 /* Guarda en el móvil que ya jugó/envió (anti-repetición) */
 function saveRecord(sentFlag){
+  if(DEMO)return; /* en demo no se guarda el bloqueo anti-repetición */
   try{
     var el=document.getElementById('pName');var nm=(el&&el.value.trim())||'';
     localStorage.setItem('juanda_v1',JSON.stringify({done:true,sent:!!sentFlag,name:nm,score:score,results:results,finishedAt:finishedAt}));
@@ -547,6 +554,11 @@ function savePhoto(){
 /* Idioma inicial + anti-repetición (estado guardado en el móvil) */
 (function(){
   var s='es';try{s=localStorage.getItem('juegoLang')||'es';}catch(e){}applyLang(s);
+  if(DEMO){ /* demo siempre empieza fresco + insignia visible */
+    var b=document.createElement('div');b.textContent='DEMO';
+    b.style.cssText='position:fixed;top:8px;left:8px;z-index:50;background:var(--green);color:#0d1820;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;letter-spacing:1px;box-shadow:0 2px 8px rgba(0,0,0,.4)';
+    document.body.appendChild(b);return;
+  }
   var rec=null;try{rec=JSON.parse(localStorage.getItem('juanda_v1')||'null');}catch(e){}
   if(rec&&rec.sent){show('scrLocked');}
   else if(rec&&rec.done){score=rec.score||0;results=rec.results||[];finishedAt=rec.finishedAt||new Date().toISOString();sent=false;photoFile=null;renderEnd();show('scrEnd');}

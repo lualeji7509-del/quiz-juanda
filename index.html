@@ -96,6 +96,7 @@
   <div class="lang">
     <button id="lang-es" class="lbtn on" type="button" onclick="setLang('es')">🇪🇸 ES</button>
     <button id="lang-sv" class="lbtn" type="button" onclick="setLang('sv')">🇸🇪 SV</button>
+    <button id="lang-en" class="lbtn" type="button" onclick="setLang('en')">🇬🇧 EN</button>
   </div>
 
   <!-- INICIO -->
@@ -187,39 +188,39 @@ var CFG={
 /* ============ Preguntas (respuestas reales de Juanda) ============ */
 /* wrong[] = lurfrågor que él eligió. (*) = trampas inventadas, cámbialas si quieres. */
 var QUESTIONS=[
- {es:'¿Cuál fue el primer instrumento que aprendió Juanda?', sv:'Vilket var det första instrumentet Juanda lärde sig?',
-  ok:{es:'La flauta',sv:'Flöjt'}, no:[{es:'La guitarra',sv:'Gitarr'},{es:'El piano',sv:'Piano'}]},
- {es:'¿Qué artista/banda escucha en bucle?', sv:'Vilken artist/band lyssnar han på på repeat?',
-  ok:{es:'Steely Dan',sv:'Steely Dan'}, no:[{es:'Metallica',sv:'Metallica'},{es:'Aventura',sv:'Aventura'}]},
- {es:'¿Primera canción que aprendió a tocar entera?', sv:'Vilken var första låten han lärde sig spela hela?',
-  ok:{es:'Riptide',sv:'Riptide'}, no:[{es:'Master of Puppets',sv:'Master of Puppets'},{es:'Estrellita dónde estás',sv:'Blinka lilla stjärna'}]},
- {es:'¿Qué género NUNCA pondría en sus playlists?', sv:'Vilken genre skulle han ALDRIG ha i sina spellistor?',
-  ok:{es:'Ninguno',sv:'Ingen'}, no:[{es:'Pop',sv:'Pop'},{es:'Hardstyle',sv:'Hardstyle'}]},
- {es:'Si tuviera que tocar en un solo escenario del mundo, ¿cuál?', sv:'Om han bara fick spela på en enda scen i världen, vilken?',
-  ok:{es:'The Sphere, LA',sv:'The Sphere, LA'}, no:[{es:'Wembley Stadium',sv:'Wembley Stadium'},{es:'3 Arena',sv:'3 Arena'}]},
- {es:'¿A qué país quiere ir en el año sabático?', sv:'Vilket land vill han åka till under sabbatsåret?',
-  ok:{es:'Japón',sv:'Japan'}, no:[{es:'Italia',sv:'Italien'},{es:'España',sv:'Spanien'}]},
- {es:'¿Comida que odia con toda el alma?', sv:'Mat han hatar av hela sin själ?',
-  ok:{es:'Las lentejas',sv:'Linser'}, no:[{es:'Las judías',sv:'Bönor'},{es:'Los garbanzos',sv:'Kikärter'}]},
- {es:'¿Una manía que vuelve loca a la familia?', sv:'En ovana som gör familjen galen?',
-  ok:{es:'Dejar los calcetines por todas partes',sv:'Att lämna strumpor överallt'}, no:[{es:'Tocar la guitarra a las 2 de la mañana',sv:'Att spela gitarr kl 2 på natten'},{es:'Llegar tarde',sv:'Att komma sent'}]},
- {es:'¿Madrugador o búho nocturno?', sv:'Morgonpigg eller nattuggla?',
-  ok:{es:'Búho nocturno',sv:'Nattuggla'}, no:[{es:'Madrugador',sv:'Morgonpigg'}]},
- {es:'¿Su mayor miedo (de mentira o de verdad)?', sv:'Hans största rädsla (på låtsas eller på riktigt)?',
-  ok:{es:'Las alturas',sv:'Höjder'}, no:[{es:'Que se rompa la guitarra',sv:'Att gitarren går sönder'},{es:'Los payasos',sv:'Clowner'}]},
- {es:'¿Cuál era su apodo de pequeño?', sv:'Vad var hans smeknamn som liten?',
-  ok:{es:'Pichupi',sv:'Pichupi'}, no:[{es:'El Rayo',sv:'El Rayo'},{es:'Robin Hood',sv:'Robin Hood'}]},
- {es:'¿Quién de la familia lo malcría más?', sv:'Vem i familjen skämmer bort honom mest?',
-  ok:{es:'Mito',sv:'Mito'}, no:[{es:'Mamá',sv:'Mamma'},{es:'Papá',sv:'Pappa'}]},
- {es:'¿Su recuerdo favorito de la infancia?', sv:'Hans favoritminne från barndomen?',
-  ok:{es:'Comer Doritos en Dubái',sv:'Äta Doritos i Dubai'}, no:[{es:'Beber champán en París',sv:'Dricka champis i Paris'},{es:'Saltar en la cama elástica en Torrevieja',sv:'Hoppa studsmatta i Torrevieja'}]},
- {es:'¿Dónde se ve en 5 años?', sv:'Var ser han sig själv om 5 år?',
-  ok:{es:'En la KMH',sv:'På KMH'}, no:[{es:'En un gran escenario',sv:'På en stor scen'},{es:'En Francia',sv:'I Frankrike'}]},
+ {es:'¿Cuál fue el primer instrumento que aprendió Juanda?', sv:'Vilket var det första instrumentet Juanda lärde sig?', en:'What was the first instrument Juanda learned?',
+  ok:{es:'La flauta',sv:'Flöjt',en:'The flute'}, no:[{es:'La guitarra',sv:'Gitarr',en:'The guitar'},{es:'El piano',sv:'Piano',en:'The piano'}]},
+ {es:'¿Qué artista/banda escucha en bucle?', sv:'Vilken artist/band lyssnar han på på repeat?', en:'Which artist/band does he listen to on repeat?',
+  ok:{es:'Steely Dan',sv:'Steely Dan',en:'Steely Dan'}, no:[{es:'Metallica',sv:'Metallica',en:'Metallica'},{es:'Aventura',sv:'Aventura',en:'Aventura'}]},
+ {es:'¿Primera canción que aprendió a tocar entera?', sv:'Vilken var första låten han lärde sig spela hela?', en:'First song he learned to play all the way through?',
+  ok:{es:'Riptide',sv:'Riptide',en:'Riptide'}, no:[{es:'Master of Puppets',sv:'Master of Puppets',en:'Master of Puppets'},{es:'Estrellita dónde estás',sv:'Blinka lilla stjärna',en:'Twinkle Twinkle Little Star'}]},
+ {es:'¿Qué género NUNCA pondría en sus playlists?', sv:'Vilken genre skulle han ALDRIG ha i sina spellistor?', en:'Which genre would he NEVER put in his playlists?',
+  ok:{es:'Ninguno',sv:'Ingen',en:'None'}, no:[{es:'Pop',sv:'Pop',en:'Pop'},{es:'Hardstyle',sv:'Hardstyle',en:'Hardstyle'}]},
+ {es:'Si tuviera que tocar en un solo escenario del mundo, ¿cuál?', sv:'Om han bara fick spela på en enda scen i världen, vilken?', en:'If he could only play on one stage in the world, which one?',
+  ok:{es:'The Sphere, LA',sv:'The Sphere, LA',en:'The Sphere, LA'}, no:[{es:'Wembley Stadium',sv:'Wembley Stadium',en:'Wembley Stadium'},{es:'3 Arena',sv:'3 Arena',en:'3 Arena'}]},
+ {es:'¿A qué país quiere ir en el año sabático?', sv:'Vilket land vill han åka till under sabbatsåret?', en:'Which country does he want to visit on his gap year?',
+  ok:{es:'Japón',sv:'Japan',en:'Japan'}, no:[{es:'Italia',sv:'Italien',en:'Italy'},{es:'España',sv:'Spanien',en:'Spain'}]},
+ {es:'¿Comida que odia con toda el alma?', sv:'Mat han hatar av hela sin själ?', en:'Which food does he hate with all his soul?',
+  ok:{es:'Las lentejas',sv:'Linser',en:'Lentils'}, no:[{es:'Las judías',sv:'Bönor',en:'Beans'},{es:'Los garbanzos',sv:'Kikärter',en:'Chickpeas'}]},
+ {es:'¿Una manía que vuelve loca a la familia?', sv:'En ovana som gör familjen galen?', en:'A habit that drives the family crazy?',
+  ok:{es:'Dejar los calcetines por todas partes',sv:'Att lämna strumpor överallt',en:'Leaving socks everywhere'}, no:[{es:'Tocar la guitarra a las 2 de la mañana',sv:'Att spela gitarr kl 2 på natten',en:'Playing guitar at 2am'},{es:'Llegar tarde',sv:'Att komma sent',en:'Being late'}]},
+ {es:'¿Madrugador o búho nocturno?', sv:'Morgonpigg eller nattuggla?', en:'Early bird or night owl?',
+  ok:{es:'Búho nocturno',sv:'Nattuggla',en:'Night owl'}, no:[{es:'Madrugador',sv:'Morgonpigg',en:'Early bird'}]},
+ {es:'¿Su mayor miedo (de mentira o de verdad)?', sv:'Hans största rädsla (på låtsas eller på riktigt)?', en:'His biggest fear (real or joking)?',
+  ok:{es:'Las alturas',sv:'Höjder',en:'Heights'}, no:[{es:'Que se rompa la guitarra',sv:'Att gitarren går sönder',en:'His guitar breaking'},{es:'Los payasos',sv:'Clowner',en:'Clowns'}]},
+ {es:'¿Cuál era su apodo de pequeño?', sv:'Vad var hans smeknamn som liten?', en:'What was his childhood nickname?',
+  ok:{es:'Pichupi',sv:'Pichupi',en:'Pichupi'}, no:[{es:'El Rayo',sv:'El Rayo',en:'El Rayo'},{es:'Robin Hood',sv:'Robin Hood',en:'Robin Hood'}]},
+ {es:'¿Quién de la familia lo malcría más?', sv:'Vem i familjen skämmer bort honom mest?', en:'Who in the family spoils him the most?',
+  ok:{es:'Mito',sv:'Mito',en:'Mito'}, no:[{es:'Mamá',sv:'Mamma',en:'Mum'},{es:'Papá',sv:'Pappa',en:'Dad'}]},
+ {es:'¿Su recuerdo favorito de la infancia?', sv:'Hans favoritminne från barndomen?', en:'His favourite childhood memory?',
+  ok:{es:'Comer Doritos en Dubái',sv:'Äta Doritos i Dubai',en:'Eating Doritos in Dubai'}, no:[{es:'Beber champán en París',sv:'Dricka champis i Paris',en:'Drinking champagne in Paris'},{es:'Saltar en la cama elástica en Torrevieja',sv:'Hoppa studsmatta i Torrevieja',en:'Jumping on the trampoline in Torrevieja'}]},
+ {es:'¿Dónde se ve en 5 años?', sv:'Var ser han sig själv om 5 år?', en:'Where does he see himself in 5 years?',
+  ok:{es:'En la KMH',sv:'På KMH',en:'At KMH (music college)'}, no:[{es:'En un gran escenario',sv:'På en stor scen',en:'On a big stage'},{es:'En Francia',sv:'I Frankrike',en:'In France'}]},
  /* (*) trampas inventadas */
- {es:'¿De qué no puede prescindir Juan?', sv:'Vad klarar Juan inte sig utan?',
-  ok:{es:'Calcetines altos blancos',sv:'Vita långa strumpor'}, no:[{es:'Snus',sv:'Snus'},{es:'Su guitarra',sv:'Sin gitarr'}]},
- {es:'¿Cuál es el videojuego favorito de Juan de todos los tiempos?', sv:'Vilket spel är Juans all time favorite?',
-  ok:{es:'Super Mario Galaxy 2',sv:'Super Mario Galaxy 2'}, no:[{es:'Mario Kart',sv:'Mario Kart'},{es:'Hollow Knight',sv:'Hollow Knight'}]}
+ {es:'¿De qué no puede prescindir Juan?', sv:'Vad klarar Juan inte sig utan?', en:'What can\'t Juan live without?',
+  ok:{es:'Calcetines altos blancos',sv:'Vita långa strumpor',en:'White knee-high socks'}, no:[{es:'Snus',sv:'Snus',en:'Snus'},{es:'Su guitarra',sv:'Sin gitarr',en:'His guitar'}]},
+ {es:'¿Cuál es el videojuego favorito de Juan de todos los tiempos?', sv:'Vilket spel är Juans all time favorite?', en:'What is Juan\'s all-time favourite video game?',
+  ok:{es:'Super Mario Galaxy 2',sv:'Super Mario Galaxy 2',en:'Super Mario Galaxy 2'}, no:[{es:'Mario Kart',sv:'Mario Kart',en:'Mario Kart'},{es:'Hollow Knight',sv:'Hollow Knight',en:'Hollow Knight'}]}
 ];
 
 /* ============ Textos UI bilingües ============ */
@@ -263,7 +264,27 @@ var UI={
    errSend:'Hoppsan, kunde inte skicka. Kolla internet och försök igen.',
    needBoth:'Skriv ditt namn och lägg till fotot för att kunna skicka.',
    waBtn:'📲 Meddela pappa via WhatsApp', keepBtn:'✨ Skapa minnesbild',
-   keepSave:'💾 Spara minnet', keepMaking:'Skapar din minnesbild…'}
+   keepSave:'💾 Spara minnet', keepMaking:'Skapar din minnesbild…'},
+ en:{lang:'en',title:'How well do you know Juanda? 🎓',
+   sThanks:'Thanks for celebrating with us! 💚',
+   sThanksMsg:'Today we celebrate Juanda\'s graduation. Thank you for sharing this special day with us. 🎓🎸',
+   saveBtn:'💾 Save the photo',
+   sTitle:'How well do you know Juanda?', sSub:'Quiz · 16 questions',
+   sIntro:'Juanda already gave his real answers. Now it\'s your turn: do you really know him? Pick an option for each question and see your score. 💚',
+   sBtn:'▶ Start', qsuf:' / 16', next:'Next →', last:'See result 🎉',
+   confirmBtn:'✓ Confirm answer', creditTxt:'Made with 💚 by <b>tu aliada</b>',
+   lThanks:'You already sent your result! 💚', lMsg:'Thanks for playing. The quiz can only be done once 🙂', lSave:'💾 Save the photo',
+   eTitle:'Done!', eHi:'You know him by heart! 🏆', eMid:'Not bad, you know him well! 💚', eLow:'Oops... time to get to know him better 😅',
+   again:'🔄 Play again', foot:'Congrats, Juanda! 💚',
+   correct:'Correct', yours:'Your answer', real:'Right answer',
+   sendTitle:'📸 To send your result to dad', namePh:'Your name',
+   photoBtn:'📸 Photo with Juanda (required)', photoChange:'🔄 Change photo',
+   sendBtn:'📲 Send to dad', sending:'Uploading your photo and result…',
+   sent:'Sent to dad! 💚 Thanks for playing.',
+   errSend:'Oops, couldn\'t send. Check your internet and try again.',
+   needBoth:'Type your name and add the photo to send.',
+   waBtn:'📲 Notify dad on WhatsApp', keepBtn:'✨ Create keepsake photo',
+   keepSave:'💾 Save keepsake', keepMaking:'Creating your keepsake…'}
 };
 var LANG='es';
 function T(){return UI[LANG];}
@@ -288,6 +309,7 @@ function applyLang(l){
   setText('qsuf',t.qsuf);
   document.getElementById('lang-es').className='lbtn'+(l==='es'?' on':'');
   document.getElementById('lang-sv').className='lbtn'+(l==='sv'?' on':'');
+  document.getElementById('lang-en').className='lbtn'+(l==='en'?' on':'');
   try{localStorage.setItem('juegoLang',l);}catch(e){}
   // si está jugando, re-renderiza la pregunta actual en el nuevo idioma
   if(document.getElementById('scrGame').className.indexOf('on')>-1 && !answered) renderQ();

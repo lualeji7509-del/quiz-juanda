@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estilos — Quiz de Evento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@400;600;800&family=Unbounded:wght@600;800&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#11161c;color:#e8f0ef;font-family:'Inter',system-ui,sans-serif;padding:30px 20px 50px;}
+  h1{text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:4px;}
+  .sb{text-align:center;color:#9fb3b0;margin-bottom:26px;font-size:.95rem;}
+  .row{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;align-items:flex-start;}
+  .col{width:340px;}
+  .tag{text-align:center;font-weight:800;font-size:1.05rem;margin-bottom:4px;}
+  .desc{text-align:center;color:#9fb3b0;font-size:.82rem;margin-bottom:14px;min-height:48px;}
+  /* marco de móvil */
+  .phone{width:300px;height:600px;margin:0 auto;border-radius:40px;padding:14px;position:relative;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+  .phone .notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:90px;height:7px;background:rgba(0,0,0,.35);border-radius:99px;z-index:5;}
+  .screen{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px 20px;text-align:center;}
+
+  /* ====== ESTILO A — Champán & Medianoche ====== */
+  .A .screen{background:linear-gradient(150deg,#0E1230 0%,#231654 100%);}
+  .A .spark{position:absolute;border-radius:50%;background:#E9C46A;opacity:.5;}
+  .A .glass{background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:26px 20px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.45);}
+  .A .em{font-size:2.6rem;}
+  .A h2{font-family:'Playfair Display',serif;font-weight:800;font-size:1.5rem;color:#fff;margin:8px 0 6px;line-height:1.15;}
+  .A p{color:#cfd6e6;font-size:.9rem;margin-bottom:18px;}
+  .A .btn{background:linear-gradient(90deg,#E9C46A,#F4D58D);color:#231654;font-weight:800;border:none;border-radius:14px;padding:13px;width:100%;font-family:'Inter';font-size:1rem;box-shadow:0 8px 22px rgba(233,196,106,.4);}
+  .A .pill{display:inline-block;background:rgba(255,107,157,.18);color:#FF6B9D;border:1px solid rgba(255,107,157,.4);font-size:.7rem;font-weight:700;padding:4px 11px;border-radius:99px;margin-bottom:14px;}
+
+  /* ====== ESTILO B — Sunset Confetti ====== */
+  .B .screen{background:#FFF7F0;}
+  .B .orb{position:absolute;border-radius:50%;filter:blur(38px);opacity:.7;}
+  .B .card{position:relative;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);border-radius:22px;padding:26px 20px;width:100%;box-shadow:0 12px 40px rgba(255,71,126,.18);}
+  .B .em{font-size:2.6rem;}
+  .B h2{font-family:'Unbounded',sans-serif;font-weight:800;font-size:1.25rem;color:#2a1530;margin:8px 0 6px;line-height:1.2;}
+  .B p{color:#7a5b66;font-family:'DM Sans';font-size:.9rem;margin-bottom:18px;}
+  .B .btn{background:linear-gradient(90deg,#FF7E5F,#FEB47B);color:#fff;font-weight:700;border:none;border-radius:14px;padding:13px;width:100%;font-family:'DM Sans';font-size:1rem;box-shadow:0 8px 22px rgba(255,126,95,.45);}
+  .B .pill{display:inline-block;background:rgba(124,58,237,.12);color:#7C3AED;font-size:.7rem;font-weight:700;padding:4px 11px;border-radius:99px;margin-bottom:14px;font-family:'DM Sans';}
+  .B .confetti{position:absolute;width:9px;height:9px;border-radius:2px;}
+</style>
+</head>
+<body>
+  <h1>Dos estilos para tu demo — elige el que más te guste</h1>
+  <div class="sb">(así se vería la portada del tour en el móvil de tu cliente)</div>
+  <div class="row">
+
+    <div class="col A">
+      <div class="tag" style="color:#E9C46A">A · Champán &amp; Medianoche</div>
+      <div class="desc">Elegante, premium, nocturno. Ideal bodas y graduaciones de gala. Dorado + serif de revista.</div>
+      <div class="phone" style="background:#0a0d1e;">
+        <div class="notch"></div>
+        <span class="spark" style="width:6px;height:6px;top:60px;left:40px;"></span>
+        <span class="spark" style="width:4px;height:4px;top:120px;right:50px;"></span>
+        <span class="spark" style="width:5px;height:5px;bottom:90px;left:60px;opacity:.3;"></span>
+        <div class="screen">
+          <div class="glass">
+            <div class="em">🥂</div>
+            <span class="pill">★ 5.0 · +500 eventos</span>
+            <h2>¿Cuánto conocéis a la pareja?</h2>
+            <p>Tus invitados juegan, ríen y compiten. Sin app.</p>
+            <button class="btn">▶ Empezar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col B">
+      <div class="tag" style="color:#FF477E">B · Sunset Confetti</div>
+      <div class="desc">Alegre, joven, colorido con gusto. Ideal cumpleaños y despedidas. Coral + display redondeada.</div>
+      <div class="phone" style="background:#ffe9dc;">
+        <div class="notch" style="background:rgba(0,0,0,.15)"></div>
+        <div class="screen">
+          <span class="orb" style="width:150px;height:150px;background:#FF7E5F;top:-30px;left:-30px;"></span>
+          <span class="orb" style="width:140px;height:140px;background:#FF477E;bottom:-20px;right:-30px;"></span>
+          <span class="orb" style="width:110px;height:110px;background:#FFD194;top:200px;right:-20px;opacity:.6;"></span>
+          <span class="confetti" style="background:#FF477E;top:70px;left:40px;transform:rotate(20deg);"></span>
+          <span class="confetti" style="background:#7C3AED;top:110px;right:46px;transform:rotate(-15deg);"></span>
+          <span class="confetti" style="background:#22C55E;bottom:120px;left:54px;transform:rotate(35deg);"></span>
+          <div class="card">
+            <div class="em">🎉</div>
+            <span class="pill">★ 5.0 · +500 fiestas</span>
+            <h2>¿Cuánto conoces al cumpleañero?</h2>
+            <p>Escanea, juega y llévate tu foto-recuerdo.</p>
+            <button class="btn">▶ Empezar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

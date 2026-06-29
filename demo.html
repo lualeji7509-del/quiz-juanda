@@ -47,7 +47,28 @@
   .pscreen{width:100%;height:100%;border-radius:28px;overflow:hidden;position:relative;background:#fff;}
   .pbar{position:absolute;top:0;left:0;height:4px;background:var(--coral);width:0;z-index:7;}
   .ptab{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:.72rem;font-weight:800;color:var(--soft);z-index:6;}
-  .frame{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 22px;text-align:center;opacity:0;transform:scale(.96);transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1);pointer-events:none;}
+  .frame{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:52px 20px 58px;text-align:center;opacity:0;transform:scale(.96);transition:opacity .45s cubic-bezier(.22,1,.36,1),transform .45s cubic-bezier(.22,1,.36,1);pointer-events:none;}
+  .appbar{position:absolute;top:0;left:0;right:0;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 15px;font-size:.74rem;font-weight:800;color:var(--ink);z-index:6;background:#fff;border-bottom:1px solid var(--line);}
+  .appbar .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;vertical-align:middle;}
+  .appbar .lv{color:var(--coral);font-size:.64rem;font-weight:800;}
+  .appbar .lv i{width:6px;height:6px;border-radius:50%;background:var(--coral);display:inline-block;margin-right:4px;animation:blink 1s infinite;vertical-align:middle;}
+  .bnav{position:absolute;bottom:0;left:0;right:0;height:48px;display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--line);background:#fff;z-index:6;font-size:1.15rem;}
+  .bnav span{opacity:.4;}
+  .bnav .act{opacity:1;transform:scale(1.18);}
+  .joinrow{display:flex;align-items:center;gap:3px;margin-top:16px;font-size:1.25rem;}
+  .joinrow b{font-size:.78rem;color:var(--green);margin-left:7px;font-weight:800;}
+  .qmeta{display:flex;justify-content:space-between;width:100%;font-size:.72rem;font-weight:800;color:var(--soft);margin-bottom:6px;}
+  .timer{width:100%;height:5px;background:#eee;border-radius:99px;overflow:hidden;margin-bottom:16px;}
+  .timer span{display:block;height:100%;width:85%;background:var(--coral);border-radius:99px;}
+  .frame.on .timer span{animation:tdown 3.4s linear forwards;}
+  @keyframes tdown{from{width:90%}to{width:6%}}
+  .keepframe{padding:7px;border-radius:18px;background:linear-gradient(135deg,var(--coral),var(--amar),var(--green));box-shadow:0 16px 34px rgba(20,36,51,.28);}
+  .frame.on .keepframe{animation:drop2 .6s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes drop2{0%{transform:translateY(-44px) scale(.92);opacity:0}100%{transform:none;opacity:1}}
+  .kfin{background:#fff;border-radius:12px;padding:8px 8px 0;}
+  .kfin img{width:152px;height:138px;object-fit:cover;border-radius:8px;display:block;transition:opacity .3s;}
+  .kcap{font-family:'Fraunces';font-weight:900;font-size:.92rem;color:var(--ink);padding:8px 2px 10px;}
+  .rkrow span{margin-left:auto;font-size:.76rem;color:var(--soft);font-weight:800;}
   .frame.on{opacity:1;transform:scale(1);}
   .fic{font-size:2.3rem;margin-bottom:8px;}
   .ftitle{font-family:'Fraunces';font-weight:900;color:var(--ink);font-size:1.2rem;margin-bottom:6px;}
@@ -97,11 +118,16 @@
   .evchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:540px;margin:0 auto 26px;}
   .marquee{overflow:hidden;width:100vw;position:relative;left:50%;margin-left:-50vw;margin-top:12px;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
   .track{display:flex;gap:14px;width:max-content;padding:6px 0;}
-  .track img{width:228px;height:150px;object-fit:cover;border-radius:16px;flex:0 0 auto;box-shadow:0 12px 26px rgba(20,36,51,.16);}
-  .t1{animation:mq 36s linear infinite;}
-  .t2{animation:mq 44s linear infinite reverse;}
+  .cell{width:228px;height:150px;border-radius:16px;overflow:hidden;flex:0 0 auto;box-shadow:0 12px 26px rgba(20,36,51,.16);}
+  .cell img{width:100%;height:100%;object-fit:cover;display:block;animation:kb 8s ease-in-out infinite alternate;}
+  .cell:nth-child(2n) img{animation-delay:-4s;}
+  .cell:nth-child(3n) img{animation-duration:10s;}
+  .cell:nth-child(4n) img{animation-duration:9s;animation-delay:-2.5s;}
+  .t1{animation:mq 44s linear infinite;}
+  .t2{animation:mq 52s linear infinite reverse;animation-delay:-10s;}
   .marquee:hover .track{animation-play-state:paused;}
   @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes kb{from{transform:scale(1)}to{transform:scale(1.13)}}
   .final{text-align:center;padding:30px 0 64px;}
   .final h2{font-size:2rem;margin-bottom:8px;max-width:16em;margin-left:auto;margin-right:auto;}
   .final p{color:var(--soft);margin-bottom:22px;}
@@ -161,15 +187,19 @@
         <div class="notch"></div>
         <div class="pscreen">
           <div class="pbar" id="pbar"></div>
-          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><img src="qr-demo.png" alt="QR"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div></div>
-          <div class="frame" data-i="1"><div class="ftitle" id="f1t" style="margin-bottom:12px"></div><div class="opt dim">A</div><div class="opt good">B ✓</div><div class="opt dim">C</div></div>
-          <div class="frame" data-i="2"><div class="flash"></div><div class="pola"><img id="polaimg" alt=""></div><div class="ftitle" id="f2t" style="margin-top:16px"></div></div>
+          <div class="appbar"><span><span class="dot"></span>Quiz de Evento</span><span class="lv"><i></i>EN VIVO</span></div>
+          <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><img src="qr-demo.png" alt="QR"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div><div class="joinrow"><span>🙂</span><span>😄</span><span>😎</span><span>🥳</span><b id="joinlbl"></b></div></div>
+          <div class="frame" data-i="1"><div class="qmeta"><span id="qmeta1"></span><span>⏱️ 0:08</span></div><div class="timer"><span></span></div><div class="ftitle" id="f1t" style="margin-bottom:10px"></div><div class="opt dim">A</div><div class="opt good">B ✓</div><div class="opt dim">C</div></div>
+          <div class="frame" data-i="2"><div class="flash"></div><div class="keepframe"><div class="kfin"><img id="polaimg" alt=""><div class="kcap" id="kcap"></div></div></div><div class="ftitle" id="f2t" style="margin-top:14px"></div></div>
           <div class="frame" data-i="3"><div class="live"><i></i><span id="f3live"></span></div><div class="ftitle" id="f3t" style="margin-bottom:10px"></div><div class="rk">
-            <div class="rkrow">🥇<div class="rkbar" style="--w:82%"></div><span id="pt1">0</span></div>
-            <div class="rkrow">🥈<div class="rkbar" style="--w:61%"></div></div>
-            <div class="rkrow">🥉<div class="rkbar" style="--w:44%"></div></div>
+            <div class="rkrow">🥇<div class="rkbar" style="--w:80%"></div><span id="pt1">0</span></div>
+            <div class="rkrow">🥈<div class="rkbar" style="--w:62%"></div><span>980</span></div>
+            <div class="rkrow">🥉<div class="rkbar" style="--w:46%"></div><span>610</span></div>
+            <div class="rkrow">4<div class="rkbar" style="--w:31%"></div><span>420</span></div>
+            <div class="rkrow">5<div class="rkbar" style="--w:19%"></div><span>250</span></div>
           </div></div>
           <div class="frame" data-i="4"><div class="fic">✨</div><div class="ftitle" id="f4t" style="margin-bottom:12px"></div><div class="chips" id="f4chips"></div></div>
+          <div class="bnav"><span>🏠</span><span class="act">🎯</span><span>🏆</span><span>📸</span></div>
           <div class="caps" id="caps"></div>
           <div class="dots" id="dots"></div>
         </div>
@@ -205,7 +235,7 @@ const FOTOS=[
  {tipo:'Despedida',tipoEn:'Hen party',tipoSv:'Möhippa',src:'https://images.pexels.com/photos/19095111/pexels-photo-19095111.jpeg?auto=compress&cs=tinysrgb&w=700'},
  {tipo:'Fiesta',tipoEn:'Party',tipoSv:'Fest',src:'https://images.pexels.com/photos/5935207/pexels-photo-5935207.jpeg?auto=compress&cs=tinysrgb&w=700'}
 ];
-const GAL=['6762314','9041817','5935207','19095111','35370605','31688036','5804898','7802442']
+const GAL=['6762314','35370605','8015160','9041817','31688036','6119578','9215422','7802442','6113464','19095111','5804898','4143429','5738245','5935207','31564363','30844308','22604116','9750934']
   .map(id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=500`);
 
 const I={
@@ -221,7 +251,7 @@ const I={
    {s:'En vivo',t:'El anfitrión lo ve en vivo',x:'El ranking y las fotos van apareciendo. La fiesta se mira a sí misma.'},
    {s:'A medida',t:'Para cualquier evento',x:'Boda, cumpleaños, graduación o despedida. Tu evento, tu idioma.'}
   ],
-  f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida',
+  f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida', join:'12 dentro', qmeta:'Pregunta 3 / 16', kcap:'🎉 ¡Felicidades!',
   evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
   finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
@@ -237,7 +267,7 @@ const I={
    {s:'Live',t:'The host sees it live',x:'The ranking and photos roll in. The party watching itself.'},
    {s:'Tailored',t:'For any event',x:'Wedding, birthday, graduation or send-off. Your event, your language.'}
   ],
-  f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way',
+  f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way', join:'12 in', qmeta:'Question 3 / 16', kcap:'🎉 Congrats!',
   evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
   finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
@@ -253,7 +283,7 @@ const I={
    {s:'Live',t:'Värden ser det live',x:'Ranking och bilder dyker upp. Festen ser sig själv.'},
    {s:'Anpassat',t:'För alla event',x:'Bröllop, födelsedag, examen eller avtackning. Ditt event, ditt språk.'}
   ],
-  f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt',
+  f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt', join:'12 med', qmeta:'Fråga 3 / 16', kcap:'🎉 Grattis!',
   evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
   finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'}
@@ -272,6 +302,7 @@ function fill(){
   $('ms1').textContent=t.ms[0]; $('ms2').textContent=t.ms[1]; $('ms3').textContent=t.ms[2];
   $('f0t').textContent=t.f0t; $('f0s').textContent=t.f0s; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t;
   $('f3live').textContent=t.f3live; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
+  $('joinlbl').textContent=t.join; $('qmeta1').textContent=t.qmeta; $('kcap').textContent=t.kcap;
   $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
   $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn; $('finMail').textContent=t.finMail;
   $('evChips').innerHTML=FOTOS.map(f=>`<span class="chip">${tipoOf(f)}</span>`).join('');
@@ -322,7 +353,7 @@ document.querySelector('.photocard .a').classList.add('show');
 $('polaimg').src=FOTOS[0].src; $('polaimg').style.transition='opacity .3s';
 function shuffleArr(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 const row1=shuffleArr(GAL), row2=shuffleArr(GAL);
-const imgs=arr=>arr.concat(arr).map(s=>`<img loading="lazy" alt="" src="${s}">`).join('');
+const imgs=arr=>arr.concat(arr).map(s=>`<div class="cell"><img loading="lazy" alt="" src="${s}"></div>`).join('');
 $('track1').innerHTML=imgs(row1); $('track2').innerHTML=imgs(row2);
 initLang();
 restart();

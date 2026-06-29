@@ -231,11 +231,11 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 <script>
 const FOTOS=[
- {tipo:'Cumpleaños',tipoEn:'Birthday',tipoSv:'Födelsedag',src:'https://images.pexels.com/photos/6762314/pexels-photo-6762314.jpeg?auto=compress&cs=tinysrgb&w=700'},
- {tipo:'Boda',tipoEn:'Wedding',tipoSv:'Bröllop',src:'https://images.pexels.com/photos/31688036/pexels-photo-31688036.jpeg?auto=compress&cs=tinysrgb&w=700'},
- {tipo:'Baby shower',tipoEn:'Baby shower',tipoSv:'Babyshower',src:'https://images.pexels.com/photos/7802442/pexels-photo-7802442.jpeg?auto=compress&cs=tinysrgb&w=700'},
- {tipo:'Despedida',tipoEn:'Hen party',tipoSv:'Möhippa',src:'https://images.pexels.com/photos/19095111/pexels-photo-19095111.jpeg?auto=compress&cs=tinysrgb&w=700'},
- {tipo:'Fiesta',tipoEn:'Party',tipoSv:'Fest',src:'https://images.pexels.com/photos/5935207/pexels-photo-5935207.jpeg?auto=compress&cs=tinysrgb&w=700'}
+ {tipo:'Cumpleaños',tipoEn:'Birthday',tipoSv:'Födelsedag',emo:'🎂',grad:'linear-gradient(135deg,#FF2E63,#FFC43D)',src:'https://images.pexels.com/photos/6762314/pexels-photo-6762314.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Boda',tipoEn:'Wedding',tipoSv:'Bröllop',emo:'💍',grad:'linear-gradient(135deg,#FFC43D,#FF8A3D)',src:'https://images.pexels.com/photos/31688036/pexels-photo-31688036.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Baby shower',tipoEn:'Baby shower',tipoSv:'Babyshower',emo:'👶',grad:'linear-gradient(135deg,#27D17C,#FFC43D)',src:'https://images.pexels.com/photos/7802442/pexels-photo-7802442.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Despedida',tipoEn:'Hen party',tipoSv:'Möhippa',emo:'🥳',grad:'linear-gradient(135deg,#FF2E63,#FF8A3D)',src:'https://images.pexels.com/photos/19095111/pexels-photo-19095111.jpeg?auto=compress&cs=tinysrgb&w=700'},
+ {tipo:'Fiesta',tipoEn:'Party',tipoSv:'Fest',emo:'🎉',grad:'linear-gradient(135deg,#FF2E63,#FFC43D,#27D17C)',src:'https://images.pexels.com/photos/5935207/pexels-photo-5935207.jpeg?auto=compress&cs=tinysrgb&w=700'}
 ];
 const GAL=['6762314','35370605','8015160','9041817','31688036','6119578','9215422','7802442','6113464','19095111','5804898','4143429','5738245','5935207','31564363','30844308','22604116','9750934']
   .map(id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=500`);
@@ -253,7 +253,7 @@ const I={
    {s:'En vivo',t:'El anfitrión lo ve en vivo',x:'El ranking y las fotos van apareciendo. La fiesta se mira a sí misma.'},
    {s:'A medida',t:'Para cualquier evento',x:'Boda, cumpleaños, graduación o despedida. Tu evento, tu idioma.'}
   ],
-  f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida', join:'12 dentro', qmeta:'Pregunta 3 / 16', kcap:'🎉 ¡Felicidades!',
+  f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida', join:'12 dentro', qmeta:'Pregunta 3 / 16', kcap:'¡Felicidades!',
   evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
   finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Escuchar', pause:'⏸ Pausar'},
@@ -269,7 +269,7 @@ const I={
    {s:'Live',t:'The host sees it live',x:'The ranking and photos roll in. The party watching itself.'},
    {s:'Tailored',t:'For any event',x:'Wedding, birthday, graduation or send-off. Your event, your language.'}
   ],
-  f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way', join:'12 in', qmeta:'Question 3 / 16', kcap:'🎉 Congrats!',
+  f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way', join:'12 in', qmeta:'Question 3 / 16', kcap:'Congrats!',
   evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
   finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Listen', pause:'⏸ Pause'},
@@ -285,7 +285,7 @@ const I={
    {s:'Live',t:'Värden ser det live',x:'Ranking och bilder dyker upp. Festen ser sig själv.'},
    {s:'Anpassat',t:'För alla event',x:'Bröllop, födelsedag, examen eller avtackning. Ditt event, ditt språk.'}
   ],
-  f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt', join:'12 med', qmeta:'Fråga 3 / 16', kcap:'🎉 Grattis!',
+  f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt', join:'12 med', qmeta:'Fråga 3 / 16', kcap:'Grattis!',
   evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
   finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Lyssna', pause:'⏸ Pausa'}
@@ -296,6 +296,7 @@ const $=id=>document.getElementById(id);
 let LANG='es', step=0, timer=null, fi=0, fotoLayer=true, photoTimer=null;
 function L(){return I[LANG];}
 function tipoOf(f){return LANG==='en'?f.tipoEn:(LANG==='sv'?f.tipoSv:f.tipo);}
+function updateKeep(){var f=FOTOS[fi],k=$('kcap');if(k)k.textContent=f.emo+' '+L().kcap;var kf=document.querySelector('.keepframe');if(kf)kf.style.background=f.grad;}
 
 function fill(){
   const t=L();
@@ -304,7 +305,7 @@ function fill(){
   $('ms1').textContent=t.ms[0]; $('ms2').textContent=t.ms[1]; $('ms3').textContent=t.ms[2];
   $('f0t').textContent=t.f0t; $('f0s').textContent=t.f0s; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t;
   $('f3live').textContent=t.f3live; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
-  $('joinlbl').textContent=t.join; $('qmeta1').textContent=t.qmeta; $('kcap').textContent=t.kcap;
+  $('joinlbl').textContent=t.join; $('qmeta1').textContent=t.qmeta; updateKeep();
   $('listenBtn').textContent=($('narr')&&!$('narr').paused?t.pause:t.listen);
   $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
   $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn; $('finMail').textContent=t.finMail;
@@ -347,7 +348,7 @@ function rotarFoto(){
     const showEl=fotoLayer?b:a, hideEl=fotoLayer?a:b;
     showEl.src=src; showEl.classList.add('show'); hideEl.classList.remove('show'); fotoLayer=!fotoLayer;
     const pola=$('polaimg'); pola.style.opacity=0; setTimeout(()=>{pola.src=src;pola.style.opacity=1;},250);
-    renderChips();
+    renderChips(); updateKeep();
   };
   img.src=src;
 }

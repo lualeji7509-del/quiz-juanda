@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz de Evento — más risas en tu fiesta</title>
+<title>QuizFiesta — más risas en tu fiesta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -170,7 +170,9 @@
       <div class="cta">
         <a class="btn main" id="cta1" href="#mas"></a>
         <a class="btn ghost" id="cta2" href="https://wa.me/46707968175?text=Hola%2C%20me%20interesa%20el%20Quiz%20de%20Evento" target="_blank" rel="noopener"></a>
+        <button class="btn ghost" id="listenBtn" type="button" onclick="toggleNarr()"></button>
       </div>
+      <audio id="narr" preload="none"></audio>
       <div class="mstats">
         <div class="mstat"><div class="n">+500</div><div class="l" id="ms1"></div></div>
         <div class="mstat"><div class="n">10 min</div><div class="l" id="ms2"></div></div>
@@ -187,7 +189,7 @@
         <div class="notch"></div>
         <div class="pscreen">
           <div class="pbar" id="pbar"></div>
-          <div class="appbar"><span><span class="dot"></span>Quiz de Evento</span><span class="lv"><i></i>EN VIVO</span></div>
+          <div class="appbar"><span><span class="dot"></span>QuizFiesta</span><span class="lv"><i></i>EN VIVO</span></div>
           <div class="frame" data-i="0"><div class="fic">📲</div><div class="qrbox"><img src="qr-demo.png" alt="QR"><div class="scanline"></div></div><div class="ftitle" id="f0t"></div><div class="fsub" id="f0s"></div><div class="joinrow"><span>🙂</span><span>😄</span><span>😎</span><span>🥳</span><b id="joinlbl"></b></div></div>
           <div class="frame" data-i="1"><div class="qmeta"><span id="qmeta1"></span><span>⏱️ 0:08</span></div><div class="timer"><span></span></div><div class="ftitle" id="f1t" style="margin-bottom:10px"></div><div class="opt dim">A</div><div class="opt good">B ✓</div><div class="opt dim">C</div></div>
           <div class="frame" data-i="2"><div class="flash"></div><div class="keepframe"><div class="kfin"><img id="polaimg" alt=""><div class="kcap" id="kcap"></div></div></div><div class="ftitle" id="f2t" style="margin-top:14px"></div></div>
@@ -254,7 +256,7 @@ const I={
   f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida', join:'12 dentro', qmeta:'Pregunta 3 / 16', kcap:'🎉 ¡Felicidades!',
   evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
-  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
+  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Escuchar', pause:'⏸ Pausar'},
  en:{lang:'en',proof:'500+ events · no app',
   h1:'More laughs and connection at your next <em>party</em>',
   sub:'Your guests scan a code and play a quiz about the guest of honor. A keepsake they take home.',
@@ -270,7 +272,7 @@ const I={
   f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way', join:'12 in', qmeta:'Question 3 / 16', kcap:'🎉 Congrats!',
   evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
-  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'},
+  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Listen', pause:'⏸ Pause'},
  sv:{lang:'sv',proof:'500+ event · ingen app',
   h1:'Mer skratt och gemenskap på din nästa <em>fest</em>',
   sub:'Dina gäster skannar en kod och spelar ett quiz om hyllningsgästen. Ett minne att ta med hem.',
@@ -286,7 +288,7 @@ const I={
   f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt', join:'12 med', qmeta:'Fråga 3 / 16', kcap:'🎉 Grattis!',
   evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
-  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email'}
+  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Lyssna', pause:'⏸ Pausa'}
 };
 
 const POP=['#FF5470','#FFC43D','#21D4B4','#FF8A3D'];
@@ -303,6 +305,7 @@ function fill(){
   $('f0t').textContent=t.f0t; $('f0s').textContent=t.f0s; $('f1t').textContent=t.f1t; $('f2t').textContent=t.f2t;
   $('f3live').textContent=t.f3live; $('f3t').textContent=t.f3t; $('f4t').textContent=t.f4t;
   $('joinlbl').textContent=t.join; $('qmeta1').textContent=t.qmeta; $('kcap').textContent=t.kcap;
+  $('listenBtn').textContent=($('narr')&&!$('narr').paused?t.pause:t.listen);
   $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
   $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn; $('finMail').textContent=t.finMail;
   $('evChips').innerHTML=FOTOS.map(f=>`<span class="chip">${tipoOf(f)}</span>`).join('');
@@ -326,7 +329,10 @@ function renderCap(){
 function go(i){step=i;renderCap();restart();}
 function nextStep(){step=(step+1)%5;renderCap();}
 function restart(){clearInterval(timer);timer=setInterval(nextStep,3400);}
-function setLang(l){if(!I[l])return;LANG=l;document.documentElement.lang=l;fill();}
+function setLang(l){if(!I[l])return;const a=document.getElementById('narr');if(a&&!a.paused)a.pause();LANG=l;document.documentElement.lang=l;fill();}
+const NARR={es:'voz/narration_es.mp3',en:'voz/narration_en.mp3',sv:'voz/narration_sv.mp3'};
+function setListenUI(on){$('listenBtn').textContent=on?L().pause:L().listen;}
+function toggleNarr(){const a=$('narr');if(a.paused){a.src=NARR[LANG];a.play().catch(()=>{});a.onended=()=>setListenUI(false);setListenUI(true);}else{a.pause();setListenUI(false);}}
 function countUp(el,to){let c=0;const s=Math.max(1,Math.round(to/45));const f=()=>{c+=s;if(c>=to)c=to;el.textContent=c.toLocaleString('es-ES');if(c<to)requestAnimationFrame(f);};f();}
 
 function confettiAcierto(){if(!window.confetti)return;confetti({particleCount:24,spread:55,startVelocity:26,scalar:.8,origin:{y:.55},colors:['#21D4B4','#FFC43D'],disableForReducedMotion:true});}

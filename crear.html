@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crea tu Quiz — QuizFiesta</title>
+<style>
+  :root{--bg:#0d1820;--card:#1b2c3a;--line:#2a3f50;--green:#27D17C;--coral:#FF2E63;--text:#e8f0ef;--muted:#9fb3b0;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.5;padding-bottom:90px;}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px;}
+  h1{font-size:1.5rem;color:#fff;margin-bottom:2px;}
+  .sub{color:var(--muted);font-size:.95rem;margin-bottom:16px;}
+  .head{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .head .full{grid-column:1/3;}
+  label{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+  input[type=text],select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:10px 12px;font-size:1rem;font-family:inherit;}
+  input:focus,select:focus{outline:none;border-color:var(--green);}
+  .intro{background:rgba(39,209,124,.08);border:1px solid rgba(39,209,124,.3);border-radius:12px;padding:12px;font-size:.9rem;color:var(--muted);margin-bottom:16px;}
+  .intro b{color:var(--text);}
+  .sect{margin:20px 0 8px;color:var(--green);font-size:1.05rem;border-bottom:1px solid var(--line);padding-bottom:5px;}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:8px 0;transition:.15s;}
+  .q.on{border-color:var(--green);box-shadow:0 0 0 1px var(--green) inset;}
+  .qtop{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
+  .chk{flex:0 0 22px;height:22px;margin-top:2px;border:2px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--bg);background:transparent;}
+  .q.on .chk{background:var(--green);border-color:var(--green);}
+  .qtext{font-weight:600;}
+  .fields{max-height:0;overflow:hidden;transition:max-height .2s;}
+  .q.on .fields{max-height:260px;margin-top:9px;}
+  .fields input{margin-bottom:7px;}
+  .hint{font-size:.72rem;color:var(--muted);}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(13,24,32,.96);border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;z-index:20;}
+  .pill{background:#142433;border:1px solid var(--green);color:var(--green);font-weight:700;border-radius:999px;padding:6px 14px;font-size:.9rem;white-space:nowrap;}
+  .btn{border:none;border-radius:12px;font-family:inherit;font-weight:700;font-size:1rem;padding:12px 18px;cursor:pointer;}
+  .btn.green{background:var(--green);color:var(--bg);flex:1;}
+  .btn.green:disabled{opacity:.4;cursor:not-allowed;}
+  .out{background:#0a141b;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:16px;display:none;}
+  .out.show{display:block;}
+  .out textarea{width:100%;height:240px;background:#0a141b;color:var(--muted);border:1px solid var(--line);border-radius:8px;font-family:ui-monospace,monospace;font-size:.78rem;padding:10px;resize:vertical;}
+  .out .note{font-size:.85rem;color:var(--muted);margin:8px 0;}
+  .out .warn{color:#ffce54;}
+  .copy{background:#142433;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 14px;font-family:inherit;font-weight:700;cursor:pointer;}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:var(--green);color:var(--bg);font-weight:700;padding:9px 16px;border-radius:999px;opacity:0;transition:.3s;z-index:40;font-size:.9rem;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎉 Crea tu Quiz</h1>
+  <div class="sub">Rellena los datos del homenajeado. Con esto se genera el juego.</div>
+
+  <div class="head">
+    <div class="full"><label>Nombre del homenajeado</label><input type="text" id="hName" placeholder="Ej: María, Álex, Juanda…"></div>
+    <div><label>Tipo de evento</label>
+      <select id="hType"><option value="cumple">🎂 Cumpleaños</option><option value="grad">🎓 Graduación</option><option value="general">✨ General</option></select></div>
+    <div><label>Idioma del quiz</label>
+      <select id="hLang"><option value="es">🇪🇸 Español</option><option value="sv">🇸🇪 Svenska</option><option value="en">🇬🇧 English</option></select></div>
+  </div>
+
+  <div class="intro">
+    <b>Marca al menos 15 preguntas</b> y escribe la <b>respuesta verdadera</b> de cada una.<br>
+    Las <b>opciones falsas (trampas)</b> son opcionales: si sabes 1-2 graciosas, escríbelas; si las dejas vacías, se generan al montar el juego.
+  </div>
+
+  <div id="list"></div>
+
+  <div class="out" id="out">
+    <div class="note">✅ Copia esto y pégalo en la lista <b>QUESTIONS</b> del juego del cliente (o pásamelo y lo monto):</div>
+    <textarea id="json" readonly></textarea>
+    <div class="note" id="outNote"></div>
+    <button class="copy" onclick="copiar()">📋 Copiar</button>
+  </div>
+</div>
+
+<div class="bar">
+  <span class="pill"><span id="cnt">0</span>/15 mín.</span>
+  <button class="btn green" id="genBtn" onclick="generar()" disabled>⚙️ Generar quiz</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const BANK={
+ '🎵 Música y ocio':[
+   '¿Cuál es la canción que pone en bucle?',
+   '¿Qué artista o grupo no se cansa de escuchar?',
+   '¿Qué serie o peli ha visto mil veces?',
+   '¿Qué hace en su tiempo libre sin falta?',
+   '¿Qué deporte o hobby le apasiona?',
+   '¿Instrumento que toca o le gustaría tocar?'
+ ],
+ '😋 Gustos y comida':[
+   '¿Comida favorita absoluta?',
+   '¿Comida que odia con toda el alma?',
+   '¿Bebida que siempre pide?',
+   '¿Plato que sabe cocinar bien?',
+   '¿Capricho dulce al que no se resiste?',
+   '¿Café, té o ninguno? ¿Cómo lo toma?'
+ ],
+ '🧠 Personalidad y manías':[
+   '¿Una manía que vuelve loca a la familia?',
+   '¿Frase que repite todo el tiempo?',
+   '¿Qué hace cuando está nervioso?',
+   '¿Madrugador o búho nocturno?',
+   '¿Su mayor miedo (real o de broma)?',
+   '¿Qué le saca de quicio al instante?',
+   '¿Ordenado o un desastre total?',
+   '¿En qué gasta el dinero sin pensar?'
+ ],
+ '👶 Infancia y familia':[
+   '¿Cuál era su apodo de pequeño?',
+   '¿Qué quería ser de mayor con 6 años?',
+   '¿La travesura más recordada de la familia?',
+   '¿Quién de la familia lo malcría más?',
+   '¿Su recuerdo favorito de la infancia?',
+   '¿Con qué hermano o primo se peleaba más?'
+ ],
+ '🎯 Sueños y futuro':[
+   '¿A qué país sueña con viajar?',
+   '¿Dónde se ve en 5 años?',
+   '¿Un sueño que aún no ha cumplido?',
+   'Si le tocara la lotería, ¿primera compra?'
+ ],
+ '🎓 Graduación (opcional)':[
+   '¿De qué se graduó exactamente?',
+   '¿La asignatura que más le costó?',
+   '¿Su mayor logro de estos años?',
+   '¿Qué le diría a su yo de hace unos años?'
+ ],
+ '🎂 Cumpleaños (opcional)':[
+   '¿Cuántos años cumple?',
+   '¿La mejor fiesta de cumpleaños que recuerda?',
+   '¿Cómo le gusta celebrar?'
+ ],
+ '✨ Extra divertidas':[
+   '¿Talento oculto que casi nadie conoce?',
+   '¿Algo vergonzoso que aún le recuerdan?',
+   '¿El emoji que más usa?'
+ ]
+};
+
+let qid=0; const items=[];
+const listEl=document.getElementById('list');
+for(const sect in BANK){
+  const h=document.createElement('div');h.className='sect';h.textContent=sect;listEl.appendChild(h);
+  BANK[sect].forEach(q=>{
+    const id=qid++;
+    const d=document.createElement('div');d.className='q';d.dataset.id=id;
+    d.innerHTML='<div class="qtop"><div class="chk">✓</div><div class="qtext">'+q+'</div></div>'+
+      '<div class="fields"><label>Respuesta verdadera</label><input type="text" class="ans" placeholder="La verdad…">'+
+      '<label>Trampas graciosas (opcional, separa con coma)</label><input type="text" class="tr" placeholder="2 respuestas falsas divertidas"></div>';
+    d.querySelector('.qtop').onclick=()=>{d.classList.toggle('on');refresh();};
+    listEl.appendChild(d);
+    items.push({id,q,el:d});
+  });
+}
+function selected(){return items.filter(i=>i.el.classList.contains('on'));}
+function refresh(){
+  const c=selected().length;
+  document.getElementById('cnt').textContent=c;
+  document.getElementById('genBtn').disabled=c<15;
+}
+function generar(){
+  const lang=document.getElementById('hLang').value;
+  const name=document.getElementById('hName').value.trim()||'[nombre]';
+  const arr=[]; let sinTrampa=0, sinResp=0;
+  selected().forEach(i=>{
+    const ans=i.el.querySelector('.ans').value.trim();
+    const traps=i.el.querySelector('.tr').value.split(',').map(s=>s.trim()).filter(Boolean);
+    if(!ans){sinResp++;return;}
+    const qtext=i.q.replace(/\bhomenajeado\b/gi,name);
+    const item={}; item[lang]=qtext;
+    item.ok={}; item.ok[lang]=ans;
+    item.no=traps.map(t=>{const o={};o[lang]=t;return o;});
+    if(traps.length===0)sinTrampa++;
+    arr.push(item);
+  });
+  const json='var QUESTIONS='+JSON.stringify(arr,null,1)+';';
+  document.getElementById('json').value=json;
+  let note='Homenajeado: <b>'+name+'</b> · idioma <b>'+lang.toUpperCase()+'</b> · <b>'+arr.length+'</b> preguntas.';
+  if(sinTrampa)note+=' <span class="warn">⚠️ '+sinTrampa+' sin trampas → generar al montar.</span>';
+  if(sinResp)note+=' <span class="warn">⚠️ '+sinResp+' marcadas sin respuesta (no incluidas).</span>';
+  document.getElementById('outNote').innerHTML=note;
+  document.getElementById('out').classList.add('show');
+  document.getElementById('out').scrollIntoView({behavior:'smooth'});
+}
+function copiar(){
+  const t=document.getElementById('json');t.select();
+  if(navigator.clipboard)navigator.clipboard.writeText(t.value);
+  const to=document.getElementById('toast');to.textContent='¡Copiado!';to.className='toast show';
+  setTimeout(()=>to.className='toast',1800);
+}
+refresh();
+</script>
+</body>
+</html>

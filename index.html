@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- QuizFiesta · motor del juego · v1.1 (2026-07-02) — ver CHANGELOG.md -->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -88,6 +89,15 @@
   .credit{display:block;text-align:center;margin:20px auto 0;font-size:.78rem;color:var(--muted);text-decoration:none;opacity:.85;}
   .credit b{color:var(--green);font-weight:700;}
   /* Tour guiado de ventas */
+  .hintRow{display:flex;justify-content:center;margin:-8px 0 14px;}
+  .hintBtn{background:var(--navy);border:1px dashed var(--green);color:var(--green);font-family:inherit;font-weight:700;font-size:.9rem;border-radius:999px;padding:8px 16px;cursor:pointer;transition:.15s;}
+  .hintBtn:active{transform:scale(.97);}
+  .hintBtn.used{border-style:solid;border-color:var(--line);color:var(--muted);cursor:default;opacity:.7;}
+  .hintCard{background:var(--card);border:1px solid var(--green);border-radius:20px;padding:24px 20px;max-width:420px;width:100%;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.6);}
+  .hintCard h3{font-size:1.35rem;color:#fff;margin:0 0 6px;}
+  .hintCard .hsub{color:var(--muted);font-size:.95rem;margin:0 0 16px;}
+  .hintCard ol{text-align:left;margin:0 0 18px;padding-left:22px;color:var(--text);}
+  .hintCard ol li{margin:0 0 12px;font-size:1.02rem;line-height:1.35;}
   .tourOverlay{position:fixed;inset:0;z-index:60;background:rgba(8,16,22,.93);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:20px;}
   .tourOverlay.on{display:flex;}
   .tourCard{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:420px;width:100%;padding:22px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.55);}
@@ -107,6 +117,16 @@
 </head>
 <body>
 <canvas id="bg"></canvas>
+
+<!-- PISTA HUMANA (comodín de 1 uso) -->
+<div class="tourOverlay" id="hintOv">
+  <div class="hintCard">
+    <h3 id="hintTitle">🧩 Pista humana</h3>
+    <p class="hsub" id="hintSub">Ve y hazle estas 3 preguntas en persona 👇</p>
+    <ol id="hintList"></ol>
+    <button class="btn green" id="hintClose" type="button" onclick="closeHint()">Cerrar</button>
+  </div>
+</div>
 
 <!-- TOUR GUIADO DE VENTAS (?tour=1) -->
 <div class="tourOverlay" id="tour">
@@ -156,6 +176,7 @@
       <div class="bar"><div class="fill" id="fill"></div></div>
       <span class="score">✅ <span id="scoreNow">0</span></span>
     </div>
+    <div class="hintRow"><button class="hintBtn" id="hintBtn" type="button" onclick="openHint()">🧩 Pista humana</button></div>
     <div class="qbox">
       <div class="qtext" id="qtext"></div>
       <div class="opts" id="opts"></div>
@@ -259,6 +280,19 @@ var QUESTIONS=[
   ok:{es:'Super Mario Galaxy 2',sv:'Super Mario Galaxy 2',en:'Super Mario Galaxy 2'}, no:[{es:'Mario Kart',sv:'Mario Kart',en:'Mario Kart'},{es:'Hollow Knight',sv:'Hollow Knight',en:'Hollow Knight'}]}
 ];
 
+/* ============ Pista humana — pozo GENERAL (sirve para cualquier evento; clonable) ============ */
+/* Comodín de 1 uso: da 3 preguntas para hacerle EN PERSONA al homenajeado. */
+var HINTS_POOL=[
+ {es:'¿Qué es lo primero que pensaste al verme entrar hoy? 😏', sv:'Vad var det första du tänkte när du såg mig komma in idag? 😏', en:"What's the first thing you thought when you saw me arrive today? 😏"},
+ {es:'Cuéntame algo tuyo que casi nadie de aquí sepa.', sv:'Berätta något om dig som nästan ingen här vet.', en:'Tell me something about you almost nobody here knows.'},
+ {es:'¿Cuál es tu recuerdo favorito conmigo?', sv:'Vilket är ditt favoritminne med mig?', en:"What's your favourite memory with me?"},
+ {es:'Si pudieras repetir un día de tu vida, ¿cuál sería?', sv:'Om du fick återuppleva en dag i ditt liv, vilken skulle det vara?', en:'If you could relive one day of your life, which one?'},
+ {es:'¿Qué canción no puede faltar hoy en la fiesta?', sv:'Vilken låt får inte saknas på festen idag?', en:"Which song can't be missing from the party today?"},
+ {es:'Dime un sueño que aún no le has contado a nadie.', sv:'Berätta en dröm du inte har berättat för någon än.', en:"Tell me a dream you haven't told anyone yet."},
+ {es:'De los que estamos aquí, ¿quién te conoce mejor y por qué?', sv:'Av alla oss här, vem känner dig bäst och varför?', en:'Of everyone here, who knows you best and why?'},
+ {es:'Si esta noche tuviera un titular, ¿cuál sería?', sv:'Om ikväll hade en rubrik, vad skulle den vara?', en:'If tonight had a headline, what would it be?'}
+];
+
 /* ============ Textos UI bilingües ============ */
 var UI={
  es:{lang:'es',title:'¿Cuánto conoces a Juanda? 🎓',
@@ -268,6 +302,8 @@ var UI={
    sTitle:'¿Cuánto conoces a Juanda?', sSub:'Quiz · 16 preguntas',
    sIntro:'Juanda ya dio sus respuestas reales. Ahora te toca a ti: ¿de verdad lo conoces? Elige una opción en cada pregunta y descubre tu puntuación. 💚',
    sBtn:'▶ Empezar', qsuf:' / 16', next:'Siguiente →', last:'Ver resultado 🎉',
+   hintBtn:'🧩 Pista humana', hintUsed:'🧩 Pista usada', hintTitle:'🧩 Pista humana',
+   hintSub:'Ve y hazle estas 3 preguntas en persona 👇', hintClose:'Cerrar',
    confirmBtn:'✓ Confirmar respuesta', creditTxt:'Hecho con 💚 por <b>tu aliada</b>',
    lThanks:'¡Ya enviaste tu resultado! 💚', lMsg:'Gracias por jugar. El quiz solo se puede hacer una vez 🙂', lSave:'💾 Guardar la foto',
    eTitle:'¡Terminaste!', eHi:'¡Lo conoces de memoria! 🏆', eMid:'¡Nada mal, le conoces bien! 💚', eLow:'Uy... toca conocerlo mejor 😅',
@@ -288,6 +324,8 @@ var UI={
    sTitle:'Hur väl känner du Juanda?', sSub:'Quiz · 16 frågor',
    sIntro:'Juanda har redan gett sina riktiga svar. Nu är det din tur: känner du honom på riktigt? Välj ett alternativ på varje fråga och se din poäng. 💚',
    sBtn:'▶ Starta', qsuf:' / 16', next:'Nästa →', last:'Se resultatet 🎉',
+   hintBtn:'🧩 Mänsklig ledtråd', hintUsed:'🧩 Ledtråd använd', hintTitle:'🧩 Mänsklig ledtråd',
+   hintSub:'Gå och ställ dessa 3 frågor i person 👇', hintClose:'Stäng',
    confirmBtn:'✓ Bekräfta svar', creditTxt:'Skapad med 💚 av <b>tu aliada</b>',
    lThanks:'Du har redan skickat ditt resultat! 💚', lMsg:'Tack för att du spelade. Quizet kan bara spelas en gång 🙂', lSave:'💾 Spara fotot',
    eTitle:'Klart!', eHi:'Du kan honom utantill! 🏆', eMid:'Inte illa, du känner honom väl! 💚', eLow:'Hoppsan... dags att lära känna honom bättre 😅',
@@ -308,6 +346,8 @@ var UI={
    sTitle:'How well do you know Juanda?', sSub:'Quiz · 16 questions',
    sIntro:'Juanda already gave his real answers. Now it\'s your turn: do you really know him? Pick an option for each question and see your score. 💚',
    sBtn:'▶ Start', qsuf:' / 16', next:'Next →', last:'See result 🎉',
+   hintBtn:'🧩 Human hint', hintUsed:'🧩 Hint used', hintTitle:'🧩 Human hint',
+   hintSub:'Go and ask these 3 questions in person 👇', hintClose:'Close',
    confirmBtn:'✓ Confirm answer', creditTxt:'Made with 💚 by <b>tu aliada</b>',
    lThanks:'You already sent your result! 💚', lMsg:'Thanks for playing. The quiz can only be done once 🙂', lSave:'💾 Save the photo',
    eTitle:'Done!', eHi:'You know him by heart! 🏆', eMid:'Not bad, you know him well! 💚', eLow:'Oops... time to get to know him better 😅',
@@ -326,7 +366,7 @@ var LANG='es';
 function T(){return UI[LANG];}
 
 /* ============ Estado ============ */
-var idx=0, score=0, answered=false, order=[], results=[];
+var idx=0, score=0, answered=false, order=[], results=[], hintUsed=false;
 var finishedAt='', photoFile=null, sending=false, sent=false, keepBlob=null, savedName='';
 var TOUR=/[?&]tour\b/.test(location.search); /* tour guiado de ventas */
 var DEMO=/[?&]demo\b/.test(location.search) || TOUR; /* modo demostración: siempre fresco, no guarda ni envía nada real */
@@ -351,10 +391,34 @@ function applyLang(l){
   var tov=document.getElementById('tour');if(tov&&tov.className.indexOf('on')>-1)renderTour();
   try{localStorage.setItem('juegoLang',l);}catch(e){}
   // si está jugando, re-renderiza la pregunta actual en el nuevo idioma
+  updateHintBtn();
+  if(document.getElementById('hintOv').className.indexOf('on')>-1) renderHintTexts();
   if(document.getElementById('scrGame').className.indexOf('on')>-1 && !answered) renderQ();
   if(document.getElementById('scrEnd').className.indexOf('on')>-1) renderEnd();
 }
 function setLang(l){applyLang(l);}
+
+/* ============ Pista humana (comodín 1 uso) ============ */
+function updateHintBtn(){
+  var b=document.getElementById('hintBtn');if(!b)return;var t=T();
+  b.textContent=hintUsed?t.hintUsed:t.hintBtn;
+  b.disabled=hintUsed;b.className='hintBtn'+(hintUsed?' used':'');
+}
+var hintPick=[];
+function renderHintTexts(){
+  var t=T();setText('hintTitle',t.hintTitle);setText('hintSub',t.hintSub);
+  document.getElementById('hintClose').textContent=t.hintClose;
+  var html='';for(var i=0;i<hintPick.length;i++)html+='<li>'+hintPick[i][LANG]+'</li>';
+  document.getElementById('hintList').innerHTML=html;
+}
+function openHint(){
+  if(hintUsed)return;
+  hintPick=shuffle(HINTS_POOL.slice()).slice(0,3);
+  renderHintTexts();
+  document.getElementById('hintOv').className='tourOverlay on';
+  hintUsed=true;updateHintBtn();
+}
+function closeHint(){document.getElementById('hintOv').className='tourOverlay';}
 
 /* ============ Tour guiado de ventas (?tour=1) ============ */
 var TOURS={
@@ -427,7 +491,7 @@ function renderTour(){
 
 /* ============ Juego ============ */
 function startGame(){
-  idx=0;score=0;results=[];
+  idx=0;score=0;results=[];hintUsed=false;updateHintBtn();
   // orden fijo de preguntas (en aparición), opciones mezcladas por pregunta
   order=[];for(var i=0;i<QUESTIONS.length;i++){
     var opts=[{q:QUESTIONS[i].ok,ok:true}];

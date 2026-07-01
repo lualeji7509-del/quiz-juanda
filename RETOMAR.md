@@ -42,7 +42,7 @@ Código 100% listo; falta desplegar la Edge Function. **Yo NO puedo teclear el t
 4. **Claude** prueba el botón "⚡ Generar automáticamente" en crear.html.
 
 ## 📋 Backlog (cuando se quiera)
-- **Pista humana** (idea aprobada): comodín de 1 uso → 3 preguntas para hacerle al homenajeado en persona; gratis; en `index.html`. Empieza por pozo general.
+- ✅ **Pista humana** (HECHO v1.1, 2026-07-02): comodín de 1 uso en `index.html` → 3 preguntas al azar (pozo general de 8, trilingüe es/sv/en) para hacerle al homenajeado en persona. Probado en navegador. Falta commit/push + subir a Render.
 - **Testimonio real**: 1 frase del organizador de la graduación de Juanda (nombre/ciudad) → bajo el demo como "Del estreno real:".
 - **Traducción IA a 3 idiomas** en crear.html (ahora genera 1 idioma).
 - **Editor de marcos por evento v2** (ahora hay marco base por tipo).

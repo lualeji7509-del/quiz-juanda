@@ -4,7 +4,7 @@ Quiz interactivo y personalizado para **eventos** (graduaciones, cumpleaños, bo
 despedidas). Los invitados juegan desde el móvil escaneando un QR y demuestran
 cuánto conocen al homenajeado. Pensado para venderse llave en mano.
 
-**Demo viva (caso Juanda):** https://quizfiesta-w78f.onrender.com
+**Demo viva (caso Juanda):** https://quizfiesta-w78f.onrender.com/demo.html
 
 ---
 

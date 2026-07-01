@@ -164,7 +164,7 @@
 
   <section class="hero">
     <div class="copy">
-      <span class="badge"><span class="st">★ 5.0</span> · <span id="bproof"></span></span>
+      <span class="badge"><span class="st">🎉</span> <span id="bproof"></span></span>
       <h1 id="h1"></h1>
       <p class="sub" id="sub"></p>
       <div class="cta">
@@ -173,10 +173,11 @@
         <button class="btn ghost" id="listenBtn" type="button" onclick="toggleNarr()"></button>
       </div>
       <audio id="narr" preload="none"></audio>
+      <p id="riskLine" style="font-size:.86rem;color:var(--soft);margin-top:10px;"></p>
       <div class="mstats">
-        <div class="mstat"><div class="n">+500</div><div class="l" id="ms1"></div></div>
-        <div class="mstat"><div class="n">10 min</div><div class="l" id="ms2"></div></div>
-        <div class="mstat"><div class="n">0</div><div class="l" id="ms3"></div></div>
+        <div class="mstat"><div class="n">0</div><div class="l" id="ms1"></div></div>
+        <div class="mstat"><div class="n">24-48h</div><div class="l" id="ms2"></div></div>
+        <div class="mstat"><div class="n">3</div><div class="l" id="ms3"></div></div>
       </div>
     </div>
 
@@ -220,6 +221,7 @@
   <section class="final">
     <h2 id="finTitle"></h2>
     <p id="finSub"></p>
+    <p id="finOffer" style="color:var(--green);font-weight:800;margin:-2px 0 16px;"></p>
     <div class="cta" style="justify-content:center">
       <a class="btn main" id="finBtn" href="https://wa.me/46707968175?text=Hola%20tu%20aliada%2C%20me%20interesa%20el%20Quiz%20de%20Evento"></a>
       <a class="btn ghost" id="finMail" href="mailto:tualiadacanal@gmail.com?subject=Quiz%20de%20Evento"></a>
@@ -241,11 +243,11 @@ const GAL=['6762314','35370605','8015160','9041817','31688036','6119578','921542
   .map(id=>`https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=500`);
 
 const I={
- es:{lang:'es',proof:'+500 eventos · sin app',
+ es:{lang:'es',proof:'Nuevo · estrenado en un evento real',
   h1:'Más risas y conexión en tu próxima <em>fiesta</em>',
   sub:'Tus invitados escanean un código y juegan sobre el homenajeado. Un recuerdo que se llevan a casa.',
   cta1:'Ver cómo funciona', cta2:'Hablamos',
-  ms:['eventos animados','para tenerlo listo','apps que descargar'],
+  ms:['apps · se juega con un QR','listo para tu evento','idiomas: ES·SV·EN'],
   steps:[
    {s:'Escanea',t:'Escanea el código',x:'Apuntas con la cámara. Sin apps, sin instalar nada.'},
    {s:'Juega',t:'Adivina y ríe',x:'Preguntas reales y alguna trampa con su gracia. Ahí empiezan las risas.'},
@@ -256,12 +258,12 @@ const I={
   f0t:'Escanea y entra', f0s:'sin apps', f1t:'¿Quién lo conoce mejor?', f2t:'Tu foto del recuerdo', f3live:'EN VIVO', f3t:'Ranking en directo', f4t:'Tu evento, a tu medida', join:'12 dentro', qmeta:'Pregunta 3 / 16', kcap:'¡Felicidades!',
   evTitle:'Encaja en cualquier celebración', evSub:'El mismo juego, con la cara de tu evento.',
   finTitle:'Si te encaja, lo preparamos contigo',
-  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Escuchar', pause:'⏸ Pausar'},
- en:{lang:'en',proof:'500+ events · no app',
+  finSub:'Un detalle sencillo que suma a lo que ya haces. Cuando quieras, hablamos.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Escuchar', pause:'⏸ Pausar', riskLine:'🛡️ Garantía de devolución · precio de lanzamiento para los primeros clientes', finOffer:'🎁 Entras como cliente fundador: mejor precio y trato directo. Sube cuando cerremos los primeros eventos.'},
+ en:{lang:'en',proof:'New · launched at a real event',
   h1:'More laughs and connection at your next <em>party</em>',
   sub:'Your guests scan a code and play a quiz about the guest of honor. A keepsake they take home.',
   cta1:'See how it works', cta2:"Let's talk",
-  ms:['events hosted','to get it ready','apps to download'],
+  ms:['apps · just scan a QR','ready for your event','languages: EN·ES·SV'],
   steps:[
    {s:'Scan',t:'Scan the code',x:"Point your camera. No apps, nothing to install."},
    {s:'Play',t:'Guess and laugh',x:"Real questions and a few cheeky trick answers. That's where the laughs begin."},
@@ -272,12 +274,12 @@ const I={
   f0t:'Scan and join', f0s:'no apps', f1t:'Who knows them best?', f2t:'Your keepsake photo', f3live:'LIVE', f3t:'Live ranking', f4t:'Your event, your way', join:'12 in', qmeta:'Question 3 / 16', kcap:'Congrats!',
   evTitle:'Fits any celebration', evSub:'The same game, with your event’s face.',
   finTitle:"If it feels right, we'll set it up with you",
-  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Listen', pause:'⏸ Pause'},
- sv:{lang:'sv',proof:'500+ event · ingen app',
+  finSub:'A simple touch that adds to what you already do. Whenever you are ready, let us talk.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Listen', pause:'⏸ Pause', riskLine:'🛡️ Money-back guarantee · launch price for the first clients', finOffer:'🎁 Come in as a founding client: best price and a direct line. It goes up once the first events are booked.'},
+ sv:{lang:'sv',proof:'Nytt · testat på ett riktigt event',
   h1:'Mer skratt och gemenskap på din nästa <em>fest</em>',
   sub:'Dina gäster skannar en kod och spelar ett quiz om hyllningsgästen. Ett minne att ta med hem.',
   cta1:'Se hur det funkar', cta2:'Hör av dig',
-  ms:['event','att få klart','appar att ladda ner'],
+  ms:['appar · skanna en QR','klart till ditt event','språk: SV·EN·ES'],
   steps:[
    {s:'Skanna',t:'Skanna koden',x:'Rikta kameran. Inga appar, inget att installera.'},
    {s:'Spela',t:'Gissa och skratta',x:'Riktiga frågor och några lurigt roliga svar. Där börjar skratten.'},
@@ -288,7 +290,7 @@ const I={
   f0t:'Skanna och gå med', f0s:'inga appar', f1t:'Vem känner hen bäst?', f2t:'Din minnesbild', f3live:'LIVE', f3t:'Live-ranking', f4t:'Ditt event, på ditt sätt', join:'12 med', qmeta:'Fråga 3 / 16', kcap:'Grattis!',
   evTitle:'Passar varje fest', evSub:'Samma spel, med ditt events ansikte.',
   finTitle:'Känns det rätt? Vi sätter upp det tillsammans',
-  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Lyssna', pause:'⏸ Pausa'}
+  finSub:'En enkel detalj som adderar till det du redan gör. Hör av dig när du vill.', finBtn:'📲 WhatsApp', finMail:'✉️ Email', listen:'🔊 Lyssna', pause:'⏸ Pausa', riskLine:'🛡️ Pengarna-tillbaka-garanti · lanseringspris för de första kunderna', finOffer:'🎁 Kom in som grundarkund: bästa pris och direktkontakt. Det höjs när de första eventen är bokade.'}
 };
 
 const POP=['#FF5470','#FFC43D','#21D4B4','#FF8A3D'];
@@ -309,6 +311,7 @@ function fill(){
   $('listenBtn').textContent=($('narr')&&!$('narr').paused?t.pause:t.listen);
   $('evTitle').textContent=t.evTitle; $('evSub').textContent=t.evSub;
   $('finTitle').textContent=t.finTitle; $('finSub').textContent=t.finSub; $('finBtn').textContent=t.finBtn; $('finMail').textContent=t.finMail;
+  $('riskLine').textContent=t.riskLine; $('finOffer').textContent=t.finOffer;
   $('evChips').innerHTML=FOTOS.map(f=>`<span class="chip">${tipoOf(f)}</span>`).join('');
   $('dots').innerHTML=t.steps.map((s,i)=>`<i class="${i===step?'on':''}" onclick="go(${i})"></i>`).join('');
   ['es','sv','en'].forEach(c=>{const b=$('l-'+c);if(b)b.className='lbtn'+(c===LANG?' on':'');});

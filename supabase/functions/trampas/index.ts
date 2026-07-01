@@ -52,11 +52,12 @@ serve(async (req: Request) => {
   if (!originPermitido(o)) return j({ error: "Origen no permitido" }, 403, o);
   if (!KEY) return j({ error: "Falta GEMINI_KEY" }, 500, o);
 
-  let body: { items?: Item[]; lang?: string; tipo?: string };
+  let body: { items?: Item[]; lang?: string; langName?: string; tipo?: string };
   try { body = await req.json(); } catch { return j({ error: "JSON inválido" }, 400, o); }
 
   const items = Array.isArray(body.items) ? body.items.slice(0, 40) : [];
-  const lang = LANG[body.lang ?? ""] ? (body.lang as string) : "es";
+  // Idioma: nombre libre (langName) para cualquier idioma; si no, el mapa es/sv/en; por defecto español.
+  const idioma = (body.langName || LANG[body.lang ?? ""] || "español").toString().slice(0, 40);
   const tipo = (body.tipo || "una fiesta").toString().slice(0, 40);
   if (!items.length) return j({ error: "sin items" }, 400, o);
 
@@ -65,11 +66,15 @@ serve(async (req: Request) => {
   ).join("\n");
 
   const prompt =
-`Eres guionista de fiestas con mucho humor. Para un quiz de "${tipo}", te doy preguntas con su respuesta CORRECTA.
-Para CADA pregunta inventa exactamente 2 respuestas FALSAS: graciosas, creíbles, CORTAS, en ${LANG[lang]}, con el mismo estilo que la correcta y SIN repetirla.
-Devuelve SOLO un JSON: un array donde cada elemento es un array de 2 strings [falsa1, falsa2], en el MISMO orden. Nada más.
+`Eres un GUIONISTA DE HUMOR NATIVO de la cultura donde se habla ${idioma}. NO traduzcas del español: piensa y escribe como un local de ese país.
+Contexto: quiz para "${tipo}". Para CADA pregunta te doy la respuesta CORRECTA y debes inventar exactamente 2 respuestas FALSAS ("trampas").
+Reglas de calidad (IMPORTANTES):
+- Escríbelas en ${idioma} NATURAL e idiomático, con el humor propio de esa cultura. Nada de traducción literal ni calcada del español.
+- Usa referencias REALES y reconocibles de ESA cultura cuando encajen: famosos, platos, marcas, canciones, lugares, manías típicas de ese país.
+- Creíbles pero divertidas, CORTAS, mismo estilo y registro que la respuesta correcta, y SIN repetir la correcta.
+Devuelve SOLO un JSON: un array donde cada elemento es un array de 2 strings [falsa1, falsa2], en el MISMO orden que las preguntas. Nada más.
 
-Preguntas:
+Preguntas (con su respuesta correcta):
 ${lista}`;
 
   const payload = {

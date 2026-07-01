@@ -39,10 +39,21 @@ Edge Function `trampas` **desplegada** + secreto `GEMINI_KEY` **guardado** + **p
 - Modelo Gemini: `gemini-flash-lite-latest` (plan GRATIS de la clave nueva; solo cuesta si se activa billing).
 - Seguridad: la función solo acepta llamadas con Origin de quizfiesta/quiz-juanda/localhost.
 
-## 📋 Backlog (cuando se quiera)
-- ✅ **Pista humana** (HECHO v1.1, 2026-07-02): comodín de 1 uso en `index.html` → 3 preguntas al azar (pozo general de 8, trilingüe es/sv/en) para hacerle al homenajeado en persona. Probado en navegador. Falta commit/push + subir a Render.
-- **Testimonio real**: 1 frase del organizador de la graduación de Juanda (nombre/ciudad) → bajo el demo como "Del estreno real:".
-- **Traducción IA a 3 idiomas** en crear.html (ahora genera 1 idioma).
+## ✅ HECHO 2026-07-02 (v1.1 + v1.2)
+- **Pista humana** (v1.1): comodín de 1 uso en `index.html` → 3 preguntas al azar (pozo general de 8, trilingüe es/sv/en). En vivo.
+- **Sin límites de evento e idioma** (v1.2): `crear.html` con "Otro" evento (banco universal) y "Otro idioma" (escribes cualquiera). Trampas IA nativas por cultura (no traducción literal), probadas en PL/FR/SV. En vivo.
+
+## 💰 REGLA DE COSTE (decidida, no re-litigar)
+- **NO usar grounding/internet** en las funciones IA. El conocimiento cultural ya vive en el modelo (gratis). Misma filosofía que las BD semanales de JAO.
+- Modelo `gemini-flash-lite-latest` (el barato). Generar trampas = 1 vez por evento, no por jugador. Clave server-side en Edge Function (nunca en cliente).
+- ⚠️ El cargo de ~319 SEK fue de JAO (clave filtrada en su index.html), NO del quiz. Reclamación en `~/Jao proyectos App/docs/RECLAMACION_GOOGLE_2026-07-01.md`.
+
+## ⏳ TAREAS PENDIENTES (grandes)
+- **Producto multi-evento + separación por cliente** (LA obra para vender a escala): un solo juego que carga cada fiesta por `?evento=slug`, columna `evento_id` en `submissions` (hoy TODO cae en una tabla → clientes mezclados), y capa de traducción IA de banco + botones. Automatiza el montaje manual actual.
+- **Poner LÍMITE DE GASTO** a la clave nueva de Gemini (belt-and-suspenders) — panel de Google, 1 min.
+- **Botones del juego en idiomas nuevos**: hoy solo es/sv/en; traducir los ~30 textos por idioma que se venda (IA de una vez).
+- **Revocar** el token de acceso `claude-deploy` en Supabase (higiene).
+- **Testimonio real**: 1 frase del organizador de la graduación de Juanda → bajo el demo.
 - **Editor de marcos por evento v2** (ahora hay marco base por tipo).
 - **URL más limpia**: colgar producto de tualiada.es (Hostinger).
 - **Ideas de `IDEAS_LANDING.md`**: varios mockups en abanico, etiquetas de módulos, "muro de fotos en vivo".

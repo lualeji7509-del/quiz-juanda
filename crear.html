@@ -57,9 +57,12 @@
         <option value="boda">💍 Boda (pareja)</option>
         <option value="despedida">🎉 Despedida</option>
         <option value="baby">🍼 Baby shower</option>
+        <option value="otro">✨ Otro (escríbelo)</option>
       </select></div>
     <div><label>Idioma del quiz</label>
-      <select id="hLang"><option value="es">🇪🇸 Español</option><option value="sv">🇸🇪 Svenska</option><option value="en">🇬🇧 English</option></select></div>
+      <select id="hLang"><option value="es">🇪🇸 Español</option><option value="sv">🇸🇪 Svenska</option><option value="en">🇬🇧 English</option><option value="otro">✨ Otro idioma</option></select></div>
+    <div class="full" id="otroWrap" style="display:none"><label>¿Qué evento es? (escríbelo)</label><input type="text" id="hOtro" placeholder="Ej: Jubilación · Comunión · Aniversario de bodas · Reencuentro…"></div>
+    <div class="full" id="otroLangWrap" style="display:none"><label>¿Qué idioma? (escríbelo)</label><input type="text" id="hLangOtro" placeholder="Ej: Polaco · Français · Deutsch · Italiano…"></div>
   </div>
 
   <div class="intro">
@@ -116,7 +119,8 @@ const BANKS={
  grad:[...PERSONA,['🎓 Graduación',C.grad],['✨ Extra divertidas',C.extra]],
  despedida:[...PERSONA,['🎉 Modo despedida',C.despe],['✨ Extra divertidas',C.extra]],
  boda:[['💘 Cómo empezó todo',C.bodaIni],['💑 La pareja',C.bodaPar],['🏠 Convivencia',C.bodaConv],['💍 La boda y el futuro',C.bodaFut],['✨ Extra divertidas',C.extra]],
- baby:[['🍼 El bebé',C.babyBebe],['🤰 El embarazo',C.babyEmb],['👨‍👩‍👦 Los futuros papás',C.babyPapas],['✨ Extra divertidas',C.extra]]
+ baby:[['🍼 El bebé',C.babyBebe],['🤰 El embarazo',C.babyEmb],['👨‍👩‍👦 Los futuros papás',C.babyPapas],['✨ Extra divertidas',C.extra]],
+ otro:[...PERSONA,['✨ Extra divertidas',C.extra]]
 };
 
 let items=[]; const listEl=document.getElementById('list');
@@ -144,7 +148,7 @@ function refresh(){
   document.getElementById('genBtn').disabled=c<15;
 }
 function generar(){
-  const lang=document.getElementById('hLang').value;
+  const L=langActual(); const lang=L.code;
   const name=document.getElementById('hName').value.trim()||'[nombre]';
   const arr=[]; let sinTrampa=0, sinResp=0;
   selected().forEach(function(i){
@@ -159,8 +163,8 @@ function generar(){
   });
   const jsonArr=JSON.stringify(arr,null,1);
   document.getElementById('json').value='var QUESTIONS='+jsonArr+';';
-  const langName={es:'español',sv:'sueco',en:'inglés'}[lang];
-  const tipoLabel=document.getElementById('hType').selectedOptions[0].textContent.trim();
+  const langName=L.name;
+  const tipoLabel=tipoActual();
   document.getElementById('prompt').value='Eres guionista de fiestas. Este es un quiz a medio hacer para un evento "'+tipoLabel+'" sobre "'+name+'". Cada pregunta tiene su respuesta correcta (ok) pero le faltan las 2 "trampas" del array "no". Rellena cada "no" VACÍO con 2 respuestas FALSAS, graciosas, creíbles y CORTAS, en '+langName+', sin repetir la correcta y con el mismo estilo. No cambies las respuestas correctas. Devuelve SOLO el array JavaScript completo:\n\nvar QUESTIONS='+jsonArr+';';
   document.getElementById('aiBox').style.display=(sinTrampa>0)?'block':'none';
   let note='Homenajeado: <b>'+name+'</b> · idioma <b>'+lang.toUpperCase()+'</b> · <b>'+arr.length+'</b> preguntas.';
@@ -176,12 +180,12 @@ function toastMsg(m){const to=document.getElementById('toast');to.textContent=m;
 async function trampasAuto(){
   const sel=selected().filter(function(i){return i.el.querySelector('.ans').value.trim();});
   if(!sel.length){toastMsg('Escribe primero las respuestas verdaderas');return;}
-  const lang=document.getElementById('hLang').value;
-  const tipo=document.getElementById('hType').selectedOptions[0].textContent.trim();
+  const L=langActual(); const lang=L.code;
+  const tipo=tipoActual();
   const items=sel.map(function(i){return {q:i.q,ok:i.el.querySelector('.ans').value.trim()};});
   const btn=document.getElementById('aiAuto');btn.disabled=true;btn.textContent='⚙️ Generando…';
   try{
-    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':FN_KEY},body:JSON.stringify({items:items,lang:lang,tipo:tipo})});
+    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':FN_KEY},body:JSON.stringify({items:items,lang:lang,langName:L.name,tipo:tipo})});
     const d=await r.json();
     if(d&&d.traps){
       sel.forEach(function(i,k){var t=(d.traps[k]||[]).filter(Boolean);if(t.length)i.el.querySelector('.tr').value=t.join(', ');});
@@ -198,8 +202,29 @@ function copiaDe(id,msg){
   const to=document.getElementById('toast');to.textContent=msg;to.className='toast show';
   setTimeout(function(){to.className='toast';},1800);
 }
-document.getElementById('hType').addEventListener('change',function(e){renderBank(e.target.value);});
-renderBank(document.getElementById('hType').value);
+function tipoActual(){
+  var s=document.getElementById('hType');
+  if(s.value==='otro'){var o=document.getElementById('hOtro').value.trim();return o||'un evento especial';}
+  return s.selectedOptions[0].textContent.trim();
+}
+function slugLang(s){return s.toLowerCase().normalize('NFD').replace(/[^a-z]/g,'').slice(0,3)||'idm';}
+function langActual(){
+  var s=document.getElementById('hLang');
+  if(s.value==='otro'){var n=document.getElementById('hLangOtro').value.trim()||'ese idioma';return {code:slugLang(n),name:n};}
+  var names={es:'español',sv:'sueco',en:'inglés'};
+  return {code:s.value,name:names[s.value]||s.value};
+}
+function onTipo(){
+  var v=document.getElementById('hType').value;
+  document.getElementById('otroWrap').style.display=(v==='otro')?'block':'none';
+  renderBank(v);
+}
+function onLang(){
+  document.getElementById('otroLangWrap').style.display=(document.getElementById('hLang').value==='otro')?'block':'none';
+}
+document.getElementById('hType').addEventListener('change',onTipo);
+document.getElementById('hLang').addEventListener('change',onLang);
+onTipo();onLang();
 </script>
 </body>
 </html>

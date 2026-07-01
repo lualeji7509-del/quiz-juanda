@@ -3,3 +3,6 @@ node_modules/
 
 # Carteles/fotos generados por cliente (privado — no subir al repo público)
 carteles/
+
+_backup_*
+supabase/.temp/

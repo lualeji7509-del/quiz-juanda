@@ -28,7 +28,6 @@
   .fields{max-height:0;overflow:hidden;transition:max-height .2s;}
   .q.on .fields{max-height:260px;margin-top:9px;}
   .fields input{margin-bottom:7px;}
-  .hint{font-size:.72rem;color:var(--muted);}
   .bar{position:fixed;left:0;right:0;bottom:0;background:rgba(13,24,32,.96);border-top:1px solid var(--line);padding:12px 16px;display:flex;gap:12px;align-items:center;z-index:20;}
   .pill{background:#142433;border:1px solid var(--green);color:var(--green);font-weight:700;border-radius:999px;padding:6px 14px;font-size:.9rem;white-space:nowrap;}
   .btn{border:none;border-radius:12px;font-family:inherit;font-weight:700;font-size:1rem;padding:12px 18px;cursor:pointer;}
@@ -38,7 +37,7 @@
   .out.show{display:block;}
   .out textarea{width:100%;height:240px;background:#0a141b;color:var(--muted);border:1px solid var(--line);border-radius:8px;font-family:ui-monospace,monospace;font-size:.78rem;padding:10px;resize:vertical;}
   .out .note{font-size:.85rem;color:var(--muted);margin:8px 0;}
-  .out .warn{color:#ffce54;}
+  .warn{color:#ffce54;}
   .copy{background:#142433;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 14px;font-family:inherit;font-weight:700;cursor:pointer;}
   .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:var(--green);color:var(--bg);font-weight:700;padding:9px 16px;border-radius:999px;opacity:0;transition:.3s;z-index:40;font-size:.9rem;}
   .toast.show{opacity:1;}
@@ -50,9 +49,15 @@
   <div class="sub">Rellena los datos del homenajeado. Con esto se genera el juego.</div>
 
   <div class="head">
-    <div class="full"><label>Nombre del homenajeado</label><input type="text" id="hName" placeholder="Ej: María, Álex, Juanda…"></div>
+    <div class="full"><label>Nombre del homenajeado (o de la pareja)</label><input type="text" id="hName" placeholder="Ej: María · Álex · Sara & Mike…"></div>
     <div><label>Tipo de evento</label>
-      <select id="hType"><option value="cumple">🎂 Cumpleaños</option><option value="grad">🎓 Graduación</option><option value="general">✨ General</option></select></div>
+      <select id="hType">
+        <option value="cumple">🎂 Cumpleaños</option>
+        <option value="grad">🎓 Graduación</option>
+        <option value="boda">💍 Boda (pareja)</option>
+        <option value="despedida">🎉 Despedida</option>
+        <option value="baby">🍼 Baby shower</option>
+      </select></div>
     <div><label>Idioma del quiz</label>
       <select id="hLang"><option value="es">🇪🇸 Español</option><option value="sv">🇸🇪 Svenska</option><option value="en">🇬🇧 English</option></select></div>
   </div>
@@ -79,81 +84,53 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const BANK={
- '🎵 Música y ocio':[
-   '¿Cuál es la canción que pone en bucle?',
-   '¿Qué artista o grupo no se cansa de escuchar?',
-   '¿Qué serie o peli ha visto mil veces?',
-   '¿Qué hace en su tiempo libre sin falta?',
-   '¿Qué deporte o hobby le apasiona?',
-   '¿Instrumento que toca o le gustaría tocar?'
- ],
- '😋 Gustos y comida':[
-   '¿Comida favorita absoluta?',
-   '¿Comida que odia con toda el alma?',
-   '¿Bebida que siempre pide?',
-   '¿Plato que sabe cocinar bien?',
-   '¿Capricho dulce al que no se resiste?',
-   '¿Café, té o ninguno? ¿Cómo lo toma?'
- ],
- '🧠 Personalidad y manías':[
-   '¿Una manía que vuelve loca a la familia?',
-   '¿Frase que repite todo el tiempo?',
-   '¿Qué hace cuando está nervioso?',
-   '¿Madrugador o búho nocturno?',
-   '¿Su mayor miedo (real o de broma)?',
-   '¿Qué le saca de quicio al instante?',
-   '¿Ordenado o un desastre total?',
-   '¿En qué gasta el dinero sin pensar?'
- ],
- '👶 Infancia y familia':[
-   '¿Cuál era su apodo de pequeño?',
-   '¿Qué quería ser de mayor con 6 años?',
-   '¿La travesura más recordada de la familia?',
-   '¿Quién de la familia lo malcría más?',
-   '¿Su recuerdo favorito de la infancia?',
-   '¿Con qué hermano o primo se peleaba más?'
- ],
- '🎯 Sueños y futuro':[
-   '¿A qué país sueña con viajar?',
-   '¿Dónde se ve en 5 años?',
-   '¿Un sueño que aún no ha cumplido?',
-   'Si le tocara la lotería, ¿primera compra?'
- ],
- '🎓 Graduación (opcional)':[
-   '¿De qué se graduó exactamente?',
-   '¿La asignatura que más le costó?',
-   '¿Su mayor logro de estos años?',
-   '¿Qué le diría a su yo de hace unos años?'
- ],
- '🎂 Cumpleaños (opcional)':[
-   '¿Cuántos años cumple?',
-   '¿La mejor fiesta de cumpleaños que recuerda?',
-   '¿Cómo le gusta celebrar?'
- ],
- '✨ Extra divertidas':[
-   '¿Talento oculto que casi nadie conoce?',
-   '¿Algo vergonzoso que aún le recuerdan?',
-   '¿El emoji que más usa?'
- ]
+/* ===== Categorías reutilizables (persona) ===== */
+const C={
+ musica:['¿Cuál es la canción que pone en bucle?','¿Qué artista o grupo no se cansa de escuchar?','¿Qué serie o peli ha visto mil veces?','¿Qué hace en su tiempo libre sin falta?','¿Qué deporte o hobby le apasiona?','¿Instrumento que toca o le gustaría tocar?'],
+ gustos:['¿Comida favorita absoluta?','¿Comida que odia con toda el alma?','¿Bebida que siempre pide?','¿Plato que sabe cocinar bien?','¿Capricho dulce al que no se resiste?','¿Café, té o ninguno? ¿Cómo lo toma?'],
+ person:['¿Una manía que vuelve loca a la familia?','¿Frase que repite todo el tiempo?','¿Qué hace cuando está nervioso?','¿Madrugador o búho nocturno?','¿Su mayor miedo (real o de broma)?','¿Qué le saca de quicio al instante?','¿Ordenado o un desastre total?','¿En qué gasta el dinero sin pensar?'],
+ infancia:['¿Cuál era su apodo de pequeño?','¿Qué quería ser de mayor con 6 años?','¿La travesura más recordada de la familia?','¿Quién de la familia lo malcría más?','¿Su recuerdo favorito de la infancia?','¿Con qué hermano o primo se peleaba más?'],
+ suenos:['¿A qué país sueña con viajar?','¿Dónde se ve en 5 años?','¿Un sueño que aún no ha cumplido?','Si le tocara la lotería, ¿primera compra?'],
+ extra:['¿Talento oculto que casi nadie conoce?','¿Algo vergonzoso que aún le recuerdan?','¿El emoji que más usa?'],
+ cumple:['¿Cuántos años cumple?','¿La mejor fiesta de cumpleaños que recuerda?','¿Cómo le gusta celebrar su cumple?'],
+ grad:['¿De qué se graduó exactamente?','¿La asignatura que más le costó?','¿Su mayor logro de estos años?','¿Qué le diría a su yo de hace unos años?'],
+ despe:['¿Su mayor locura de soltero/a?','¿La borrachera más épica que recuerdan?','¿La peor cita que ha tenido?','¿Qué apodo le pusieron los amigos?','¿Cómo conoció a su pareja?','¿Qué le va a costar más de estar en pareja?'],
+ bodaIni:['¿Dónde se conocieron?','¿Cómo fue la primera cita?','¿Quién dio el primer paso?','¿Quién dijo "te quiero" primero?','¿Cómo fue la pedida de mano?'],
+ bodaPar:['¿Cuánto tiempo llevan juntos?','¿Cuál es "su canción"?','¿Mote cariñoso que se dicen?','¿Su plan favorito juntos?','¿Quién es más romántico de los dos?'],
+ bodaConv:['¿Quién ronca?','¿Quién cocina mejor?','¿Quién es más ordenado?','¿Quién manda de verdad en casa?','¿La manía del otro que más le saca de quicio?','¿Quién controla el mando de la tele?'],
+ bodaFut:['¿A dónde irán de luna de miel?','¿Cuántos hijos quieren?','¿Dónde se ven en 10 años?','¿Quién lloró más en la boda? (apuesta)'],
+ babyBebe:['¿Niño o niña?','¿Nombre elegido (o el favorito)?','¿A quién creen que se parecerá?','¿Fecha probable de llegada?','¿Peso que apuestan al nacer?'],
+ babyEmb:['¿Antojo más raro del embarazo?','¿Cómo se enteraron de que venía bebé?','¿Qué es lo que más sueño le quita?','¿Ya tienen canción para dormirlo?','¿Cómo dieron la noticia a la familia?'],
+ babyPapas:['¿Quién cambiará más pañales?','¿Quién se pondrá más nervioso?','¿Cuántos hijos quieren en total?','¿Qué manía suya NO quieren pasarle al bebé?','¿Qué es lo que más ilusión les hace?']
+};
+const PERSONA=[['🎵 Música y ocio',C.musica],['😋 Gustos y comida',C.gustos],['🧠 Personalidad y manías',C.person],['👶 Infancia y familia',C.infancia],['🎯 Sueños y futuro',C.suenos]];
+const BANKS={
+ cumple:[...PERSONA,['🎂 Cumpleaños',C.cumple],['✨ Extra divertidas',C.extra]],
+ grad:[...PERSONA,['🎓 Graduación',C.grad],['✨ Extra divertidas',C.extra]],
+ despedida:[...PERSONA,['🎉 Modo despedida',C.despe],['✨ Extra divertidas',C.extra]],
+ boda:[['💘 Cómo empezó todo',C.bodaIni],['💑 La pareja',C.bodaPar],['🏠 Convivencia',C.bodaConv],['💍 La boda y el futuro',C.bodaFut],['✨ Extra divertidas',C.extra]],
+ baby:[['🍼 El bebé',C.babyBebe],['🤰 El embarazo',C.babyEmb],['👨‍👩‍👦 Los futuros papás',C.babyPapas],['✨ Extra divertidas',C.extra]]
 };
 
-let qid=0; const items=[];
-const listEl=document.getElementById('list');
-for(const sect in BANK){
-  const h=document.createElement('div');h.className='sect';h.textContent=sect;listEl.appendChild(h);
-  BANK[sect].forEach(q=>{
-    const id=qid++;
-    const d=document.createElement('div');d.className='q';d.dataset.id=id;
-    d.innerHTML='<div class="qtop"><div class="chk">✓</div><div class="qtext">'+q+'</div></div>'+
-      '<div class="fields"><label>Respuesta verdadera</label><input type="text" class="ans" placeholder="La verdad…">'+
-      '<label>Trampas graciosas (opcional, separa con coma)</label><input type="text" class="tr" placeholder="2 respuestas falsas divertidas"></div>';
-    d.querySelector('.qtop').onclick=()=>{d.classList.toggle('on');refresh();};
-    listEl.appendChild(d);
-    items.push({id,q,el:d});
+let items=[]; const listEl=document.getElementById('list');
+function renderBank(type){
+  const bank=BANKS[type]||BANKS.cumple; listEl.innerHTML=''; items=[]; let qid=0;
+  bank.forEach(function(pair){
+    const sect=pair[0], qs=pair[1];
+    const h=document.createElement('div');h.className='sect';h.textContent=sect;listEl.appendChild(h);
+    qs.forEach(function(q){
+      const id=qid++;
+      const d=document.createElement('div');d.className='q';
+      d.innerHTML='<div class="qtop"><div class="chk">✓</div><div class="qtext">'+q+'</div></div>'+
+        '<div class="fields"><label>Respuesta verdadera</label><input type="text" class="ans" placeholder="La verdad…">'+
+        '<label>Trampas graciosas (opcional, separa con coma)</label><input type="text" class="tr" placeholder="2 respuestas falsas divertidas"></div>';
+      d.querySelector('.qtop').onclick=function(){d.classList.toggle('on');refresh();};
+      listEl.appendChild(d); items.push({id:id,q:q,el:d});
+    });
   });
+  refresh();
 }
-function selected(){return items.filter(i=>i.el.classList.contains('on'));}
+function selected(){return items.filter(function(i){return i.el.classList.contains('on');});}
 function refresh(){
   const c=selected().length;
   document.getElementById('cnt').textContent=c;
@@ -163,19 +140,17 @@ function generar(){
   const lang=document.getElementById('hLang').value;
   const name=document.getElementById('hName').value.trim()||'[nombre]';
   const arr=[]; let sinTrampa=0, sinResp=0;
-  selected().forEach(i=>{
+  selected().forEach(function(i){
     const ans=i.el.querySelector('.ans').value.trim();
-    const traps=i.el.querySelector('.tr').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const traps=i.el.querySelector('.tr').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
     if(!ans){sinResp++;return;}
-    const qtext=i.q.replace(/\bhomenajeado\b/gi,name);
-    const item={}; item[lang]=qtext;
+    const item={}; item[lang]=i.q;
     item.ok={}; item.ok[lang]=ans;
-    item.no=traps.map(t=>{const o={};o[lang]=t;return o;});
+    item.no=traps.map(function(t){var o={};o[lang]=t;return o;});
     if(traps.length===0)sinTrampa++;
     arr.push(item);
   });
-  const json='var QUESTIONS='+JSON.stringify(arr,null,1)+';';
-  document.getElementById('json').value=json;
+  document.getElementById('json').value='var QUESTIONS='+JSON.stringify(arr,null,1)+';';
   let note='Homenajeado: <b>'+name+'</b> · idioma <b>'+lang.toUpperCase()+'</b> · <b>'+arr.length+'</b> preguntas.';
   if(sinTrampa)note+=' <span class="warn">⚠️ '+sinTrampa+' sin trampas → generar al montar.</span>';
   if(sinResp)note+=' <span class="warn">⚠️ '+sinResp+' marcadas sin respuesta (no incluidas).</span>';
@@ -187,9 +162,10 @@ function copiar(){
   const t=document.getElementById('json');t.select();
   if(navigator.clipboard)navigator.clipboard.writeText(t.value);
   const to=document.getElementById('toast');to.textContent='¡Copiado!';to.className='toast show';
-  setTimeout(()=>to.className='toast',1800);
+  setTimeout(function(){to.className='toast';},1800);
 }
-refresh();
+document.getElementById('hType').addEventListener('change',function(e){renderBank(e.target.value);});
+renderBank(document.getElementById('hType').value);
 </script>
 </body>
 </html>

@@ -34,12 +34,10 @@ Punto único para continuar en otra sesión. Frase para arrancar:
 - **crear.html**: bancos cumple/graduación/boda/despedida/baby → genera `QUESTIONS` + **trampas IA nivel (a)** por prompt (funciona ya).
 - Kit de venta completo. Repo limpio.
 
-## ⏳ PENDIENTE #1 (activo) — Trampas IA "seamless" (botón dentro de la app)
-Código 100% listo; falta desplegar la Edge Function. **Yo NO puedo teclear el token de Supabase ni la API key de Gemini (seguridad), y el panel de Supabase está bloqueado para mi navegador.** Pasos:
-1. **Lucho** en Terminal: `export PATH="$HOME/.local/bin:$PATH"` y luego **`supabase login`** (abre navegador, autoriza). ← quedó a medias (solo hizo el export).
-2. **Claude** corre: `cd ~/quiz-juanda && supabase functions deploy trampas --project-ref kwikuwlnqpomevtiskta --no-verify-jwt`
-3. **Lucho** crea clave Gemini gratis (aistudio.google.com/apikey) y la pone: `supabase secrets set GEMINI_KEY=SU_CLAVE --project-ref kwikuwlnqpomevtiskta`
-4. **Claude** prueba el botón "⚡ Generar automáticamente" en crear.html.
+## ✅ PENDIENTE #1 — Trampas IA "seamless" — HECHO (2026-07-02)
+Edge Function `trampas` **desplegada** + secreto `GEMINI_KEY` **guardado** + **probado en vivo** (genera 2 trampas graciosas por pregunta). Sesión Supabase persistida (`supabase login --token`, token del portapapeles, nunca en chat). Token de acceso `claude-deploy` conviene revocarlo en la web (higiene, no urgente).
+- Modelo Gemini: `gemini-flash-lite-latest` (plan GRATIS de la clave nueva; solo cuesta si se activa billing).
+- Seguridad: la función solo acepta llamadas con Origin de quizfiesta/quiz-juanda/localhost.
 
 ## 📋 Backlog (cuando se quiera)
 - ✅ **Pista humana** (HECHO v1.1, 2026-07-02): comodín de 1 uso en `index.html` → 3 preguntas al azar (pozo general de 8, trilingüe es/sv/en) para hacerle al homenajeado en persona. Probado en navegador. Falta commit/push + subir a Render.

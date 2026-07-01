@@ -75,7 +75,9 @@
     <div class="note" id="outNote"></div>
     <button class="copy" onclick="copiar()">📋 Copiar quiz</button>
     <div id="aiBox" style="display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px;">
-      <div class="note">✨ <b>Trampas con IA</b> (opcional): copia este texto y pégalo en <b>ChatGPT / Gemini / Claude</b>. Te devuelve el quiz con las 2 opciones falsas graciosas ya rellenas, listo para pegar.</div>
+      <div class="note">✨ <b>Trampas con IA</b> — genera las 2 opciones falsas graciosas de cada pregunta.</div>
+      <button class="btn green" id="aiAuto" style="width:100%;margin:4px 0 12px" onclick="trampasAuto()">⚡ Generar trampas automáticamente</button>
+      <div class="note">O, si prefieres, copia este prompt y pégalo en ChatGPT / Gemini / Claude:</div>
       <textarea id="prompt" readonly></textarea>
       <button class="copy" onclick="copiarPrompt()">📋 Copiar prompt IA</button>
     </div>
@@ -167,6 +169,26 @@ function generar(){
   document.getElementById('outNote').innerHTML=note;
   document.getElementById('out').classList.add('show');
   document.getElementById('out').scrollIntoView({behavior:'smooth'});
+}
+const FN_URL='https://kwikuwlnqpomevtiskta.supabase.co/functions/v1/trampas';
+const FN_KEY='sb_publishable_AFr8w1i0HUv1ArvbZDuTbg_jXdgkX1K';
+function toastMsg(m){const to=document.getElementById('toast');to.textContent=m;to.className='toast show';setTimeout(function(){to.className='toast';},2200);}
+async function trampasAuto(){
+  const sel=selected().filter(function(i){return i.el.querySelector('.ans').value.trim();});
+  if(!sel.length){toastMsg('Escribe primero las respuestas verdaderas');return;}
+  const lang=document.getElementById('hLang').value;
+  const tipo=document.getElementById('hType').selectedOptions[0].textContent.trim();
+  const items=sel.map(function(i){return {q:i.q,ok:i.el.querySelector('.ans').value.trim()};});
+  const btn=document.getElementById('aiAuto');btn.disabled=true;btn.textContent='⚙️ Generando…';
+  try{
+    const r=await fetch(FN_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':FN_KEY},body:JSON.stringify({items:items,lang:lang,tipo:tipo})});
+    const d=await r.json();
+    if(d&&d.traps){
+      sel.forEach(function(i,k){var t=(d.traps[k]||[]).filter(Boolean);if(t.length)i.el.querySelector('.tr').value=t.join(', ');});
+      generar();toastMsg('¡Trampas generadas! ✨');
+    } else { toastMsg('Motor no listo — usa el prompt de abajo 👇'); }
+  }catch(e){ toastMsg('Sin conexión — usa el prompt de abajo 👇'); }
+  btn.disabled=false;btn.textContent='⚡ Generar trampas automáticamente';
 }
 function copiar(){copiaDe('json','¡Quiz copiado!');}
 function copiarPrompt(){copiaDe('prompt','¡Prompt copiado!');}

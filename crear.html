@@ -73,7 +73,12 @@
     <div class="note">✅ Copia esto y pégalo en la lista <b>QUESTIONS</b> del juego del cliente (o pásamelo y lo monto):</div>
     <textarea id="json" readonly></textarea>
     <div class="note" id="outNote"></div>
-    <button class="copy" onclick="copiar()">📋 Copiar</button>
+    <button class="copy" onclick="copiar()">📋 Copiar quiz</button>
+    <div id="aiBox" style="display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px;">
+      <div class="note">✨ <b>Trampas con IA</b> (opcional): copia este texto y pégalo en <b>ChatGPT / Gemini / Claude</b>. Te devuelve el quiz con las 2 opciones falsas graciosas ya rellenas, listo para pegar.</div>
+      <textarea id="prompt" readonly></textarea>
+      <button class="copy" onclick="copiarPrompt()">📋 Copiar prompt IA</button>
+    </div>
   </div>
 </div>
 
@@ -150,7 +155,12 @@ function generar(){
     if(traps.length===0)sinTrampa++;
     arr.push(item);
   });
-  document.getElementById('json').value='var QUESTIONS='+JSON.stringify(arr,null,1)+';';
+  const jsonArr=JSON.stringify(arr,null,1);
+  document.getElementById('json').value='var QUESTIONS='+jsonArr+';';
+  const langName={es:'español',sv:'sueco',en:'inglés'}[lang];
+  const tipoLabel=document.getElementById('hType').selectedOptions[0].textContent.trim();
+  document.getElementById('prompt').value='Eres guionista de fiestas. Este es un quiz a medio hacer para un evento "'+tipoLabel+'" sobre "'+name+'". Cada pregunta tiene su respuesta correcta (ok) pero le faltan las 2 "trampas" del array "no". Rellena cada "no" VACÍO con 2 respuestas FALSAS, graciosas, creíbles y CORTAS, en '+langName+', sin repetir la correcta y con el mismo estilo. No cambies las respuestas correctas. Devuelve SOLO el array JavaScript completo:\n\nvar QUESTIONS='+jsonArr+';';
+  document.getElementById('aiBox').style.display=(sinTrampa>0)?'block':'none';
   let note='Homenajeado: <b>'+name+'</b> · idioma <b>'+lang.toUpperCase()+'</b> · <b>'+arr.length+'</b> preguntas.';
   if(sinTrampa)note+=' <span class="warn">⚠️ '+sinTrampa+' sin trampas → generar al montar.</span>';
   if(sinResp)note+=' <span class="warn">⚠️ '+sinResp+' marcadas sin respuesta (no incluidas).</span>';
@@ -158,10 +168,12 @@ function generar(){
   document.getElementById('out').classList.add('show');
   document.getElementById('out').scrollIntoView({behavior:'smooth'});
 }
-function copiar(){
-  const t=document.getElementById('json');t.select();
+function copiar(){copiaDe('json','¡Quiz copiado!');}
+function copiarPrompt(){copiaDe('prompt','¡Prompt copiado!');}
+function copiaDe(id,msg){
+  const t=document.getElementById(id);t.select();
   if(navigator.clipboard)navigator.clipboard.writeText(t.value);
-  const to=document.getElementById('toast');to.textContent='¡Copiado!';to.className='toast show';
+  const to=document.getElementById('toast');to.textContent=msg;to.className='toast show';
   setTimeout(function(){to.className='toast';},1800);
 }
 document.getElementById('hType').addEventListener('change',function(e){renderBank(e.target.value);});

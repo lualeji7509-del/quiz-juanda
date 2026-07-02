@@ -119,12 +119,14 @@ document.getElementById('pin').addEventListener('keydown',function(e){if(e.key==
 function fmtTime(iso){try{return new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
 function fmtDate(iso){try{return new Date(iso).toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}catch(e){return '';}}
 
+var EVENTO=(location.search.match(/[?&]evento=([a-z0-9_-]+)/i)||[])[1]||'';
+var EV_FILTER=EVENTO?('&evento=eq.'+encodeURIComponent(EVENTO)):'';
 function load(){
   if(CFG.SUPABASE_URL.indexOf('XXXX')>-1){
     document.getElementById('list').innerHTML='<div class="empty">⚙️ Falta conectar Supabase.<br>Claude lo enchufa y aquí aparecerán los resultados.</div>';return;
   }
   document.getElementById('list').innerHTML='<div class="empty">Cargando…</div>';
-  fetch(CFG.SUPABASE_URL+'/rest/v1/submissions?select=*&order=finished_at.asc',
+  fetch(CFG.SUPABASE_URL+'/rest/v1/submissions?select=*'+EV_FILTER+'&order=finished_at.asc',
     {headers:{apikey:CFG.SUPABASE_ANON,Authorization:'Bearer '+CFG.SUPABASE_ANON}})
    .then(function(r){return r.json();})
    .then(function(d){DATA=Array.isArray(d)?d:[];stats();render();})
@@ -185,7 +187,7 @@ function resetRanking(){
     return;
   }
   clearTimeout(resetTimer);resetArmed=false;btn.textContent='Borrando…';
-  fetch(CFG.SUPABASE_URL+'/rest/v1/submissions?score=gte.0',
+  fetch(CFG.SUPABASE_URL+'/rest/v1/submissions?'+(EVENTO?('evento=eq.'+encodeURIComponent(EVENTO)):'score=gte.0'),
     {method:'DELETE',headers:{apikey:CFG.SUPABASE_ANON,Authorization:'Bearer '+CFG.SUPABASE_ANON,Prefer:'return=minimal'}})
    .then(function(r){
      btn.className='btn reset';btn.textContent='🗑️ Reiniciar ranking (borrar todo)';

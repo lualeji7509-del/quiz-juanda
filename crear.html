@@ -73,7 +73,18 @@
   <div id="list"></div>
 
   <div class="out" id="out">
-    <div class="note">✅ Copia esto y pégalo en la lista <b>QUESTIONS</b> del juego del cliente (o pásamelo y lo monto):</div>
+    <div id="pubBox" style="border:1px solid var(--green);border-radius:12px;padding:14px;margin-bottom:16px;background:rgba(39,209,124,.07)">
+      <div class="note" style="margin-top:0">🚀 <b>Publica el juego</b> y comparte el enlace + QR con los invitados. (Necesita el nombre del homenajeado arriba.)</div>
+      <button class="btn green" id="pubBtn" style="width:100%;margin:4px 0" onclick="publicar()">🚀 Publicar evento</button>
+      <div id="pubResult" style="display:none;margin-top:12px">
+        <div class="note">🎮 Enlace del juego (para los invitados):</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px"><input type="text" id="pubGame" readonly><button class="copy" onclick="copiaDe('pubGame','¡Enlace copiado!')">📋</button></div>
+        <div class="note">🏆 Enlace del ranking (privado, para ti):</div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><input type="text" id="pubRank" readonly><button class="copy" onclick="copiaDe('pubRank','¡Enlace copiado!')">📋</button></div>
+        <img id="pubQR" alt="QR del juego" style="display:block;margin:0 auto;width:200px;height:200px;background:#fff;border-radius:12px;padding:8px">
+      </div>
+    </div>
+    <div class="note">📋 (Alternativa manual) Copia esto y pégalo en la lista <b>QUESTIONS</b> de un juego, o pásamelo:</div>
     <textarea id="json" readonly></textarea>
     <div class="note" id="outNote"></div>
     <button class="copy" onclick="copiar()">📋 Copiar quiz</button>
@@ -173,9 +184,35 @@ function generar(){
   document.getElementById('outNote').innerHTML=note;
   document.getElementById('out').classList.add('show');
   document.getElementById('out').scrollIntoView({behavior:'smooth'});
+  // preparar publicación con el quiz recién generado
+  PUB={arr:arr};
+  var pr=document.getElementById('pubResult');if(pr)pr.style.display='none';
+  var pb=document.getElementById('pubBtn');if(pb){pb.disabled=false;pb.textContent='🚀 Publicar evento';}
+}
+function slugify(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,30)||'evento';}
+async function publicar(){
+  if(!PUB||!PUB.arr||!PUB.arr.length){toastMsg('Primero genera el quiz');return;}
+  var nombre=document.getElementById('hName').value.trim();
+  if(!nombre){toastMsg('Escribe el nombre del homenajeado arriba');document.getElementById('hName').focus();return;}
+  var L=langActual();
+  var slug=slugify(nombre)+'-'+Math.random().toString(36).slice(2,6);
+  var btn=document.getElementById('pubBtn');btn.disabled=true;btn.textContent='⚙️ Publicando…';
+  try{
+    var r=await fetch(EV_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':FN_KEY,'Authorization':'Bearer '+FN_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify({slug:slug,nombre:nombre,tipo:tipoActual(),lang:L.code,preguntas:PUB.arr})});
+    if(!r.ok)throw 0;
+    var origin=location.origin;
+    document.getElementById('pubGame').value=origin+'/jugar.html?evento='+slug;
+    document.getElementById('pubRank').value=origin+'/reporte.html?evento='+slug;
+    document.getElementById('pubQR').src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(origin+'/jugar.html?evento='+slug);
+    document.getElementById('pubResult').style.display='block';
+    btn.textContent='✅ Publicado';toastMsg('¡Evento publicado! 🎉');
+  }catch(e){btn.disabled=false;btn.textContent='🚀 Publicar evento';toastMsg('No se pudo publicar. Reintenta.');}
 }
 const FN_URL='https://kwikuwlnqpomevtiskta.supabase.co/functions/v1/trampas';
+const EV_URL='https://kwikuwlnqpomevtiskta.supabase.co/rest/v1/eventos';
 const FN_KEY='sb_publishable_AFr8w1i0HUv1ArvbZDuTbg_jXdgkX1K';
+var PUB=null; /* último quiz generado, listo para publicar */
 function toastMsg(m){const to=document.getElementById('toast');to.textContent=m;to.className='toast show';setTimeout(function(){to.className='toast';},2200);}
 async function trampasAuto(){
   const sel=selected().filter(function(i){return i.el.querySelector('.ans').value.trim();});

@@ -48,8 +48,16 @@ Edge Function `trampas` **desplegada** + secreto `GEMINI_KEY` **guardado** + **p
 - Modelo `gemini-flash-lite-latest` (el barato). Generar trampas = 1 vez por evento, no por jugador. Clave server-side en Edge Function (nunca en cliente).
 - ⚠️ El cargo de ~319 SEK fue de JAO (clave filtrada en su index.html), NO del quiz. Reclamación en `~/Jao proyectos App/docs/RECLAMACION_GOOGLE_2026-07-01.md`.
 
+## ✅ PRODUCTO MULTI-EVENTO — BASE HECHA (v1.3, 2026-07-02)
+- DB: tabla `eventos` + columna `evento` en `submissions` (migración archivada en `supabase/migrations/`). Ejecutada vía Management API con el token del keychain (`security find-generic-password -s "Supabase CLI"`).
+- `jugar.html?evento=slug` carga la fiesta desde la DB. `crear.html` → botón Publicar (enlace+QR). `reporte.html?evento=slug` filtra por cliente. Probado punta a punta.
+- Cómo se publica un evento: crear.html → rellenar → Generar → **🚀 Publicar** → copia el enlace del juego y el del ranking.
+
 ## ⏳ TAREAS PENDIENTES (grandes)
-- **Producto multi-evento + separación por cliente** (LA obra para vender a escala): un solo juego que carga cada fiesta por `?evento=slug`, columna `evento_id` en `submissions` (hoy TODO cae en una tabla → clientes mezclados), y capa de traducción IA de banco + botones. Automatiza el montaje manual actual.
+- **Hardening publicación**: hoy `eventos` acepta insert con la clave pública (cualquiera podría crear/spamear). Mover la publicación a una Edge Function con `service_role` y quitar el insert público.
+- **Fotos a escala**: Supabase free 1GB se satura con volumen; evaluar Pro (~25€/mes) o fotos opcionales/auto-borrado tras evento.
+- **Botones del juego en idiomas nuevos**: `jugar.html` muestra la UI en es/sv/en; idioma nuevo cae a español (las preguntas sí salen en el idioma). Traducir los ~30 textos por idioma que se venda.
+- **Editar/borrar eventos** desde un panel (hoy solo se crean).
 - **Poner LÍMITE DE GASTO** a la clave nueva de Gemini (belt-and-suspenders) — panel de Google, 1 min.
 - **Botones del juego en idiomas nuevos**: hoy solo es/sv/en; traducir los ~30 textos por idioma que se venda (IA de una vez).
 - **Revocar** el token de acceso `claude-deploy` en Supabase (higiene).
